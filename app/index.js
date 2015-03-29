@@ -1,4 +1,5 @@
 'use strict';
+
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
@@ -8,7 +9,6 @@ var xml2js = require('xml2js');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
-    // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to ' + chalk.red('Gadget') + ', the gnarly generator for Grunt Drupal Tasks!'
     ));
@@ -25,8 +25,8 @@ module.exports = yeoman.generators.Base.extend({
       message: 'Which version of ' + chalk.red('Drupal core') + ' would you like to use?',
       default: '8.x',
       choices: [
-        {'name': 'Drupal 7', 'value': '7.x'},
-        {'name': 'Drupal 8', 'value': '8.x'}
+        {'name': 'Drupal 8', 'value': '8.x'},
+        {'name': 'Drupal 7', 'value': '7.x'}
       ]
     }];
 
@@ -38,6 +38,8 @@ module.exports = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
+  // Install Grunt Drupal Tasks, either the latest published version or the
+  // current development version in the master branch.
   installGDT: function () {
     var done = this.async(),
       self = this,
@@ -47,8 +49,8 @@ module.exports = yeoman.generators.Base.extend({
       return done();
     }
 
-    this.log('\nInstalling latest version of Grunt Drupal Tasks:');
-    this.npmVersion = this.options['use-master'] ? 'git+https://github.com/phase2/grunt-drupal-tasks.git' : 'grunt-drupal-tasks';
+    this.log('\nInstalling latest version of Grunt Drupal Tasks...');
+    this.npmVersion = this.options['use-master'] ? 'git+https://github.com/phase2/grunt-drupal-tasks.git#master' : 'grunt-drupal-tasks';
     spid = this.spawnCommand('npm', ['install', this.npmVersion]);
     spid.on('close', function (code) {
       if (code) {
@@ -68,6 +70,7 @@ module.exports = yeoman.generators.Base.extend({
     });
   },
 
+  // Determine the latest stable release for the requested Drupal core version.
   getDrupalCoreRelease: function () {
     var done = this.async(),
       self = this;
@@ -81,16 +84,16 @@ module.exports = yeoman.generators.Base.extend({
         xml2js.parseString(body, function (err, result) {
           if (!err && result && result.project && result.project.releases && result.project.releases[0] && result.project.releases[0].release && result.project.releases[0].release[0] && result.project.releases[0].release[0].version) {
             self.drupalCoreRelease = result.project.releases[0].release[0].version[0];
-            self.log('Setting up Drush makefile to install Drupal version ' + chalk.red(self.drupalCoreRelease) + '\n');
+            self.log('Setting up Drush makefile to install Drupal version ' + chalk.red(self.drupalCoreRelease) + '.\n');
           }
           else {
-            self.log('Could not parse latest version of Drupal for Drush makefile\n');
+            self.log.error('Could not parse latest version of Drupal for Drush makefile.\n');
           }
           done();
         });
       }
       else {
-        self.log('Could not retrieve latest version of Drupal for Drush makefile\n');
+        self.log.error('Could not retrieve latest version of Drupal for Drush makefile.\n');
         done();
       }
     });
@@ -143,5 +146,10 @@ module.exports = yeoman.generators.Base.extend({
     this.installDependencies({
       skipInstall: this.options['skip-install']
     });
+  },
+
+  end: function () {
+    this.log('\nGadget has ' + chalk.red('finished') + ' setting up the Drupal project scaffold with Grunt Drupal Tasks!\n');
+    this.log('Run `' + chalk.red('grunt') + '` to run the first build of this project.\n');
   }
 });
