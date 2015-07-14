@@ -112,16 +112,6 @@ module.exports = yeoman.generators.Base.extend({
         this.templatePath(this.drupalCoreVersion),
         this.destinationPath()
       );
-
-      // If the latest published version of GDT is not used, then update the
-      // project's package.json accordingly.
-      if (this.npmVersion !== 'grunt-drupal-tasks') {
-        var pkg = this.fs.readJSON('package.json');
-        if (pkg) {
-          pkg.dependencies['grunt-drupal-tasks'] = this.npmVersion;
-          this.fs.writeJSON('package.json', pkg);
-        }
-      }
     },
 
     gitignore: function () {
@@ -129,6 +119,62 @@ module.exports = yeoman.generators.Base.extend({
         this.destinationPath('gitignore'),
         this.destinationPath('.gitignore')
       );
+    },
+
+    packageJson: function () {
+      var pkg = this.fs.readJSON('package.json'),
+        pkgChanged = false;
+
+      if (!pkg) {
+        //TODO: throw error
+      }
+
+      // If the latest published version of GDT is not used, then update the
+      // project's package.json accordingly.
+      if (this.npmVersion !== 'grunt-drupal-tasks') {
+        pkg.dependencies['grunt-drupal-tasks'] = this.npmVersion;
+        pkgChanged = true;
+      }
+
+      // If any changes were made to package.json, write them.
+      if (pkgChanged) {
+        this.fs.writeJSON('package.json', pkg);
+      }
+    },
+
+    gruntConfig: function () {
+      var gcfg = this.fs.readJSON('Gruntconfig.json'),
+        gcfgChanged = false;
+
+      if (!gcfg) {
+        //TODO: throw error
+      }
+
+      // Process theme options and insert into Gruntconfig.json.
+      if (this.options.themeName && this.options.themePath) {
+        var themeOpts = {
+          path: "<%= config.srcPaths.drupal %>/themes/" + this.options.themeName
+        };
+
+        if (this.options.themeType === 'compass') {
+          themeOpts.compass = true;
+        }
+        else if (this.options.themeType === 'grunt' && this.options.themeGruntTask) {
+          themeOpts.grunt = true;
+          themeOpts.gruntTask = this.options.themeGruntTask;
+        }
+
+        if (!gcfg.hasOwnProperty('themes')) {
+          gcfg.themes = {};
+        }
+        gcfg.themes[this.options.themeName] = themeOpts;
+        gcfgChanged = true;
+      }
+
+      // If any changes were made to Gruntconfig.json, write them.
+      if (gcfgChanged) {
+        this.fs.writeJSON('Gruntconfig.json', gcfg);
+      }
     },
 
     drushMakefile: function () {
