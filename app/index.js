@@ -75,13 +75,19 @@ module.exports = yeoman.generators.Base.extend({
   // Determine the latest stable release for the requested Drupal core version.
   getDrupalCoreRelease: function () {
     var done = this.async(),
-      self = this;
+      self = this,
+      drupalUpdatesVersion = this.drupalCoreVersion;
 
     // Provide a fallback value in case the request fails.
     this.drupalCoreRelease = this.drupalCoreVersion;
 
+    // Handle version used by updates.drupal.org for 8.x.x releases.
+    if (this.drupalCoreVersion.match(/^8\.\d+\.x$/)) {
+      drupalUpdatesVersion = '8.x';
+    }
+
     // Find the latest stable release for the Drupal core version.
-    request('https://updates.drupal.org/release-history/drupal/' + this.drupalCoreVersion, function (error, response, body) {
+    request('https://updates.drupal.org/release-history/drupal/' + drupalUpdatesVersion, function (error, response, body) {
       if (!error && response.statusCode == 200 && body.length) {
         xml2js.parseString(body, function (err, result) {
           if (!err && result && result.project && result.project.releases && result.project.releases[0] && result.project.releases[0].release && result.project.releases[0].release[0] && result.project.releases[0].release[0].version) {
@@ -89,7 +95,7 @@ module.exports = yeoman.generators.Base.extend({
             self.log('Setting up Drush makefile to install Drupal version ' + chalk.red(self.drupalCoreRelease) + '.\n');
           }
           else {
-            self.log.error('Could not parse latest version of Drupal for Drush makefile.\n');
+            self.log.error('Could not parse latest version of Drupal for Drush makefile. Received:\n', result);
           }
           done();
         });
