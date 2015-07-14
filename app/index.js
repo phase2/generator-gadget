@@ -9,9 +9,11 @@ var xml2js = require('xml2js');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
-    this.log(yosay(
-      'Welcome to ' + chalk.red('Gadget') + ', the gnarly generator for Grunt Drupal Tasks!'
-    ));
+    if (!this.options.skipWelcome) {
+      this.log(yosay(
+        'Welcome to ' + chalk.red('Gadget') + ', the gnarly generator for Grunt Drupal Tasks!'
+      ));
+    }
 
     this.pkg = require('../package.json');
   },
@@ -143,9 +145,9 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   install: function () {
-    this.installDependencies({
-      skipInstall: this.options['skip-install']
-    });
+    if (!this.options['skip-install']) {
+      this.npmInstall();
+    }
   },
 
   end: function () {
