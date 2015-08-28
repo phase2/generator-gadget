@@ -1,8 +1,8 @@
-core = <%= coreCompatibility %>
 api = 2
+core = <%= coreCompatibility %>
 
 ; Drupal Core
-projects[drupal][version] = "<%= drupalCoreRelease %>"
+projects[drupal][version] = "<%= drupalDistroRelease %>"
 
 ; =====================================
 ; Contrib Modules

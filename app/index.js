@@ -3,9 +3,7 @@
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
-var jf = require('jsonfile');
-var request = require('request');
-var xml2js = require('xml2js');
+var path = require('path');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
@@ -16,24 +14,43 @@ module.exports = yeoman.generators.Base.extend({
     }
 
     this.pkg = require('../package.json');
+    this.distros = require('./distros');
   },
 
   prompting: function () {
     var done = this.async();
 
-    var prompts = [{
+    var chooseDistro = {
       type: 'list',
-      name: 'drupalCoreVersion',
-      message: 'Which version of ' + chalk.red('Drupal core') + ' would you like to use?',
-      default: '8.0.x',
-      choices: [
-        {'name': 'Drupal 8', 'value': '8.0.x'},
-        {'name': 'Drupal 7', 'value': '7.x'}
-      ]
-    }];
+      name: 'drupalDistro',
+      message: 'Which ' + chalk.red('Drupal distribution') + ' would you like to use?',
+      default: 'drupal',
+      choices: []
+    };
+
+    for (var i in this.distros) {
+      chooseDistro.choices.push(this.distros[i].option);
+    }
+
+    var prompts = [
+      chooseDistro
+    ];
+
+    for (var i in this.distros) {
+      var version = {
+        type: 'list',
+        name: 'drupalDistroVersion-' + this.distros[i].id,
+        message: 'Which version of ' + chalk.red(this.distros[i].option.name) + ' would you like to use?',
+        default: this.distros[i].versionDefault,
+        choices: this.distros[i].versions,
+        when: this.distros[i].whenCallback
+      };
+      prompts.push(version);
+    }
 
     this.prompt(prompts, function (props) {
-      this.drupalCoreVersion = props.drupalCoreVersion;
+      this.drupalDistro = props.drupalDistro;
+      this.drupalDistroVersion = props['drupalDistroVersion-' + this.drupalDistro];
 
       this.log("\nOk, I'm going to start assembling this project...");
       done();
@@ -42,69 +59,31 @@ module.exports = yeoman.generators.Base.extend({
 
   // Install Grunt Drupal Tasks, either the latest published version or the
   // current development version in the master branch.
-  installGDT: function () {
-    var done = this.async(),
-      self = this,
-      spid;
-
-    if (this.options['skip-install']) {
-      return done();
-    }
-
-    this.log('\nInstalling latest version of Grunt Drupal Tasks...');
-    this.npmVersion = this.options['use-master'] ? 'git+https://github.com/phase2/grunt-drupal-tasks.git#master' : 'grunt-drupal-tasks';
-    spid = this.spawnCommand('npm', ['install', this.npmVersion]);
-    spid.on('close', function (code) {
-      if (code) {
-        self.log.error('\nAn error occurred while fetching Grunt Drupal Tasks.\n');
-        process.exit(1);
-      }
-
-      jf.readFile('./node_modules/grunt-drupal-tasks/package.json', function(err, obj) {
-        if (err || !obj || !obj.version) {
-          self.log.error('\nAn error occurred while installing Grunt Drupal Tasks.\n');
-          process.exit(1);
-        }
-
-        self.log('\nInstalled version ' + chalk.red(obj.version) + ' of Grunt Drupal Tasks.\n');
-        done();
-      });
-    });
+  installGDT: function() {
+    require('./gdt')(this).install();
   },
 
   // Determine the latest stable release for the requested Drupal core version.
-  getDrupalCoreRelease: function () {
-    var done = this.async(),
-      self = this,
-      drupalUpdatesVersion = this.drupalCoreVersion;
-
+  getDistroRelease: function () {
     // Provide a fallback value in case the request fails.
-    this.drupalCoreRelease = this.drupalCoreVersion;
+    this.drupalDistroRelease = this.drupalDistroVersion;
 
     // Handle version used by updates.drupal.org for 8.x.x releases.
-    if (this.drupalCoreVersion.match(/^8\.\d+\.x$/)) {
+    var drupalUpdatesVersion = this.drupalDistroVersion;
+    if (drupalUpdatesVersion.match(/^8\.\d+\.x$/)) {
       drupalUpdatesVersion = '8.x';
     }
 
-    // Find the latest stable release for the Drupal core version.
-    request('https://updates.drupal.org/release-history/drupal/' + drupalUpdatesVersion, function (error, response, body) {
-      if (!error && response.statusCode == 200 && body.length) {
-        xml2js.parseString(body, function (err, result) {
-          if (!err && result && result.project && result.project.releases && result.project.releases[0] && result.project.releases[0].release && result.project.releases[0].release[0] && result.project.releases[0].release[0].version) {
-            self.drupalCoreRelease = result.project.releases[0].release[0].version[0];
-            self.log('Setting up Drush makefile to install Drupal version ' + chalk.red(self.drupalCoreRelease) + '.\n');
-          }
-          else {
-            self.log.error('Could not parse latest version of Drupal for Drush makefile. Received:\n', result);
-          }
-          done();
-        });
+    // Find the latest stable release for the Drupal distro version.
+    var done = this.async();
+    this.distros[this.drupalDistro].releaseVersion(drupalUpdatesVersion, done, function(err, version, done) {
+      if (err) {
+        this.log.error(err);
+        return done(err);
       }
-      else {
-        self.log.error('Could not retrieve latest version of Drupal for Drush makefile.\n');
-        done();
-      }
-    });
+      this.drupalDistroRelease = version;
+      done();
+    }.bind(this));
   },
 
   writing: {
@@ -115,7 +94,7 @@ module.exports = yeoman.generators.Base.extend({
       );
 
       this.directory(
-        this.templatePath(this.drupalCoreVersion),
+        this.templatePath(path.resolve(this.drupalDistro, this.drupalDistroVersion)),
         this.destinationPath()
       );
     },
@@ -177,6 +156,9 @@ module.exports = yeoman.generators.Base.extend({
         gcfgChanged = true;
       }
 
+      gcfg.generated = { name: this.pkg.name, version: this.pkg.version };
+      gcfgChanged = true;
+
       // If any changes were made to Gruntconfig.json, write them.
       if (gcfgChanged) {
         this.fs.writeJSON('Gruntconfig.json', gcfg);
@@ -184,18 +166,11 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     drushMakefile: function () {
-      var tokens = {
-        drupalCoreRelease: this.drupalCoreRelease,
-        coreCompatibility: this.drupalCoreVersion
-      };
-      this.fs.copyTpl(
-        this.templatePath('project.make'),
-        this.destinationPath('src/project.make'),
-        tokens
-      );
+      this.log('Setting up Drush makefile to install Drupal Distribution ' + this.drupalDistro + ' version ' + chalk.red(this.drupalDistroRelease) + '.\n');
+      var done = this.async();
+      this.distros[this.drupalDistro].drushMakeFile(this, done);
     }
   },
-
   install: function () {
     if (!this.options['skip-install']) {
       this.npmInstall();
