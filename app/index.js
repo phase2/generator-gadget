@@ -60,7 +60,7 @@ module.exports = yeoman.generators.Base.extend({
   // Install Grunt Drupal Tasks, either the latest published version or the
   // current development version in the master branch.
   installGDT: function() {
-    require('./gdt')(this).install();
+    //require('./gdt')(this).install();
   },
 
   // Determine the latest stable release for the requested Drupal core version.
@@ -153,16 +153,12 @@ module.exports = yeoman.generators.Base.extend({
           gcfg.themes = {};
         }
         gcfg.themes[this.options.themeName] = themeOpts;
-        gcfgChanged = true;
       }
 
+      gcfg.serve = { "profile": this.distros[this.drupalDistro].profile };
       gcfg.generated = { name: this.pkg.name, version: this.pkg.version };
-      gcfgChanged = true;
 
-      // If any changes were made to Gruntconfig.json, write them.
-      if (gcfgChanged) {
-        this.fs.writeJSON('Gruntconfig.json', gcfg);
-      }
+      this.fs.writeJSON('Gruntconfig.json', gcfg);
     },
 
     drushMakefile: function () {

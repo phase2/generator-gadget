@@ -1,6 +1,9 @@
 
 function init() {
-  var module = { id: 'openatrium' };
+  var module = {
+    id: 'openatrium',
+    profile: 'openatrium'
+  };
 
   module.option = {
     name: 'Open Atrium',

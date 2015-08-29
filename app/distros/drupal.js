@@ -1,5 +1,8 @@
 function init() {
-  var module = { id: 'drupal' }
+  var module = {
+    id: 'drupal',
+    profile: 'standard'
+  }
 
   module.option = {
     name: 'Drupal',
