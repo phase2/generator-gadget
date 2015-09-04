@@ -85,6 +85,7 @@ module.exports = yeoman.generators.Base.extend({
     if (this.drupalCoreVersion.match(/^8\.\d+\.x$/)) {
       drupalUpdatesVersion = '8.x';
     }
+    this.drupalUpdatesVersion = drupalUpdatesVersion;
 
     // Find the latest stable release for the Drupal core version.
     request('https://updates.drupal.org/release-history/drupal/' + drupalUpdatesVersion, function (error, response, body) {
@@ -186,7 +187,7 @@ module.exports = yeoman.generators.Base.extend({
     drushMakefile: function () {
       var tokens = {
         drupalCoreRelease: this.drupalCoreRelease,
-        coreCompatibility: this.drupalCoreVersion
+        coreCompatibility: this.drupalUpdatesVersion
       };
       this.fs.copyTpl(
         this.templatePath('project.make'),
