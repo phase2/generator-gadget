@@ -25,9 +25,9 @@ module.exports = yeoman.generators.Base.extend({
       type: 'list',
       name: 'drupalCoreVersion',
       message: 'Which version of ' + chalk.red('Drupal core') + ' would you like to use?',
-      default: '8.0.x',
+      default: '8.x',
       choices: [
-        {'name': 'Drupal 8', 'value': '8.0.x'},
+        {'name': 'Drupal 8', 'value': '8.x'},
         {'name': 'Drupal 7', 'value': '7.x'}
       ]
     }];
