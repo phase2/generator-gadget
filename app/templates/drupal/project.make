@@ -1,13 +1,10 @@
 api = 2
 core = <%= coreCompatibility %>
 
-; Drupal Core
+defaults[projects][subdir] = "contrib"
+defaults[projects][type] = "module"
+
+;; Drupal Core
 projects[drupal][version] = "<%= drupalDistroRelease %>"
 
-; =====================================
-; Contrib Modules
-; =====================================
-
-; By default, store all contrib modules in the "contrib" subdirectory of the
-; modules directory.
-defaults[projects][subdir] = "contrib"
+;; Project-specific Dependencies

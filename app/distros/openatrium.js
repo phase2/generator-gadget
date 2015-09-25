@@ -28,11 +28,12 @@ function init() {
     var releaseVersion = yo.drupalDistroRelease.match(/^\d+\.x\-(.+)/)[1];
 
     var tokens = {
+      drupalDistroName: module.id,
       drupalDistroRelease: releaseVersion,
       coreCompatibility: yo.drupalDistroVersion
     };
     yo.fs.copyTpl(
-      yo.templatePath('openatrium/project.make'),
+      yo.templatePath('project-distro.make'),
       yo.destinationPath('src/project.make'),
       tokens
     );
