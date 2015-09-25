@@ -7,7 +7,7 @@ function init() {
 
   module.option = {
     name: 'Open Atrium',
-    value: 'openatrium'
+    value: module.id
   };
 
   module.versions = [

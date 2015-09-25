@@ -14,7 +14,7 @@ function init() {
     {name: 'Drupal 7', value: '7.x'}
   ];
 
-  module.versionDefault = '8.0.x',
+  module.versionDefault = '8.0.x';
 
   module.whenCallback = function(answers) {
     return answers.drupalDistro == 'drupal';

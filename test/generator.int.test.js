@@ -11,7 +11,8 @@ describe('gadget:app', function () {
       .inDir(path.join(os.tmpdir(), './temp-test'))
       .withOptions({'skip-install': true})
       .withPrompt({
-        drupalCoreVersion: '8.x'
+        drupalDistro: 'drupal',
+        'drupalDistroVersion-drupal': '8.0.x'
       })
       .on('end', done);
   });
