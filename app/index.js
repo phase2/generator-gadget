@@ -60,7 +60,7 @@ module.exports = yeoman.generators.Base.extend({
   // Install Grunt Drupal Tasks, either the latest published version or the
   // current development version in the master branch.
   installGDT: function() {
-    //require('./gdt')(this).install();
+    require('./gdt')(this).install();
   },
 
   // Determine the latest stable release for the requested Drupal core version.
