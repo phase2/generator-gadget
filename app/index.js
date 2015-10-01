@@ -149,6 +149,10 @@ module.exports = yeoman.generators.Base.extend({
           themeOpts.gruntTask = this.options.themeGruntTask;
         }
 
+        if (this.options.themeScripts) {
+          themeOpts.scripts = this.options.themeScripts;
+        }
+
         if (!gcfg.hasOwnProperty('themes')) {
           gcfg.themes = {};
         }
