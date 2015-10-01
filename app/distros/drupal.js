@@ -10,11 +10,11 @@ function init() {
   };
 
   module.versions = [
-    {name: 'Drupal 8', value: '8.0.x'},
+    {name: 'Drupal 8', value: '8.x'},
     {name: 'Drupal 7', value: '7.x'}
   ];
 
-  module.versionDefault = '8.0.x';
+  module.versionDefault = '8.x';
 
   module.whenCallback = function(answers) {
     return answers.drupalDistro == 'drupal';
