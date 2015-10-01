@@ -2,7 +2,7 @@ function init() {
   var module = {
     id: 'drupal',
     profile: 'standard'
-  }
+  };
 
   module.option = {
     name: 'Drupal',
@@ -10,15 +10,15 @@ function init() {
   };
 
   module.versions = [
-    {name: 'Drupal 8', value: '8.0.x'},
+    {name: 'Drupal 8', value: '8.x'},
     {name: 'Drupal 7', value: '7.x'}
   ];
 
-  module.versionDefault = '8.0.x';
+  module.versionDefault = '8.x';
 
   module.whenCallback = function(answers) {
     return answers.drupalDistro == 'drupal';
-  }
+  };
 
   module.releaseVersion = function(majorVersion, done, cb) {
     require('../drupalProjectVersion').latestRelease(module.id, majorVersion, done, cb);
@@ -36,9 +36,9 @@ function init() {
     );
 
     done();
-  }
+  };
 
   return module;
-};
+}
 
 module.exports = init();
