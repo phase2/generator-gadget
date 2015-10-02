@@ -19,6 +19,7 @@ module.exports = yeoman.generators.Base.extend({
 
   prompting: function () {
     var done = this.async();
+    var prompts = require('../lib/questions');
 
     var chooseDistro = {
       type: 'list',
@@ -32,9 +33,7 @@ module.exports = yeoman.generators.Base.extend({
       chooseDistro.choices.push(this.distros[i].option);
     }
 
-    var prompts = [
-      chooseDistro
-    ];
+    prompts.push(chooseDistro);
 
     for (var i in this.distros) {
       var version = {
@@ -51,6 +50,7 @@ module.exports = yeoman.generators.Base.extend({
     this.prompt(prompts, function (props) {
       this.drupalDistro = props.drupalDistro;
       this.drupalDistroVersion = props['drupalDistroVersion-' + this.drupalDistro];
+      this.props = props;
 
       this.log("\nOk, I'm going to start assembling this project...");
       done();
@@ -107,8 +107,7 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     packageJson: function () {
-      var pkg = this.fs.readJSON('package.json'),
-        pkgChanged = false;
+      var pkg = this.fs.readJSON('package.json');
 
       if (!pkg) {
         //TODO: throw error
@@ -118,18 +117,23 @@ module.exports = yeoman.generators.Base.extend({
       // project's package.json accordingly.
       if (this.npmVersion !== 'grunt-drupal-tasks') {
         pkg.dependencies['grunt-drupal-tasks'] = this.npmVersion;
-        pkgChanged = true;
       }
 
-      // If any changes were made to package.json, write them.
-      if (pkgChanged) {
-        this.fs.writeJSON('package.json', pkg);
-      }
+      pkg.name = this.props.name;
+      pkg.description = this.props.description;
+
+      this.fs.writeJSON('package.json', pkg);
+    },
+
+    composerJson: function () {
+      var composer = this.fs.readJSON('composer.json');
+      composer.name = this.props.name;
+      composer.description = this.props.description;
+      this.fs.writeJSON('composer.json', composer);
     },
 
     gruntConfig: function () {
-      var gcfg = this.fs.readJSON('Gruntconfig.json'),
-        gcfgChanged = false;
+      var gcfg = this.fs.readJSON('Gruntconfig.json')
 
       if (!gcfg) {
         //TODO: throw error
@@ -165,12 +169,17 @@ module.exports = yeoman.generators.Base.extend({
       this.fs.writeJSON('Gruntconfig.json', gcfg);
     },
 
+    readme: function () {
+      require('./readme').generate(this);
+    },
+
     drushMakefile: function () {
       this.log('Setting up Drush makefile to install Drupal Distribution ' + this.drupalDistro + ' version ' + chalk.red(this.drupalDistroRelease) + '.\n');
       var done = this.async();
       this.distros[this.drupalDistro].drushMakeFile(this, done);
     }
   },
+
   install: function () {
     if (!this.options['skip-install']) {
       this.npmInstall();
