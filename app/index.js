@@ -4,6 +4,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var path = require('path');
+var _ = require('lodash');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
@@ -19,7 +20,7 @@ module.exports = yeoman.generators.Base.extend({
 
   prompting: function () {
     var done = this.async();
-    var prompts = require('../lib/questions');
+    var prompts = require('../lib/questions').init(this.options);
 
     var chooseDistro = {
       type: 'list',
@@ -50,7 +51,7 @@ module.exports = yeoman.generators.Base.extend({
     this.prompt(prompts, function (props) {
       this.drupalDistro = props.drupalDistro;
       this.drupalDistroVersion = props['drupalDistroVersion-' + this.drupalDistro];
-      this.props = props;
+      this.props = _.assign(props, this.options);
 
       this.log("\nOk, I'm going to start assembling this project...");
       done();
@@ -119,16 +120,16 @@ module.exports = yeoman.generators.Base.extend({
         pkg.dependencies['grunt-drupal-tasks'] = this.npmVersion;
       }
 
-      pkg.name = this.props.name;
-      pkg.description = this.props.description;
+      pkg.name = this.props.projectName;
+      pkg.description = this.props.projectDescription;
 
       this.fs.writeJSON('package.json', pkg);
     },
 
     composerJson: function () {
       var composer = this.fs.readJSON('composer.json');
-      composer.name = this.props.name;
-      composer.description = this.props.description;
+      composer.name = this.props.projectName;
+      composer.description = this.props.projectDescription;
       this.fs.writeJSON('composer.json', composer);
     },
 
