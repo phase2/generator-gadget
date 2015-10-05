@@ -25,6 +25,7 @@
   ],
   "dependencies": {
     "chalk": "1.0.0",
+    "lodash": "^3.10.1",
     "jsonfile": "2.0.0",
     "request": "2.54.0",
     "require-directory": "^2.1.1",

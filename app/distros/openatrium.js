@@ -16,12 +16,14 @@ function init() {
 
   module.versionDefault = '7.x';
 
+  module.description = 'This project is built on [' + module.option.name + '](http://openatrium.com) for more information visit the [Atrium Project Homepage](https://drupal.org/project/openatrium).';
+
   module.whenCallback = function(answers) {
     return answers.drupalDistro == 'openatrium';
   }
 
   module.releaseVersion = function(majorVersion, done, cb) {
-    require('../drupalProjectVersion').latestRelease(module.id, majorVersion, done, cb);
+    require('../../lib/drupalProjectVersion').latestRelease(module.id, majorVersion, done, cb);
   };
 
   module.drushMakeFile = function(yo, done) {
