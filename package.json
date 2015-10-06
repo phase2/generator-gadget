@@ -9,7 +9,7 @@
     "url": "https://github.com/phase2/generator-gadget.git"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=0.12.0"
   },
   "scripts": {
     "test": "mocha"
