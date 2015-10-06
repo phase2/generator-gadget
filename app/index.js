@@ -19,34 +19,13 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   prompting: function () {
+    var self = this;
     var done = this.async();
-    var prompts = require('../lib/questions').init(this.options);
 
-    var chooseDistro = {
-      type: 'list',
-      name: 'drupalDistro',
-      message: 'Which ' + chalk.red('Drupal distribution') + ' would you like to use?',
-      default: 'drupal',
-      choices: []
-    };
-
-    for (var i in this.distros) {
-      chooseDistro.choices.push(this.distros[i].option);
-    }
-
-    prompts.push(chooseDistro);
-
-    for (var i in this.distros) {
-      var version = {
-        type: 'list',
-        name: 'drupalDistroVersion-' + this.distros[i].id,
-        message: 'Which version of ' + chalk.red(this.distros[i].option.name) + ' would you like to use?',
-        default: this.distros[i].versionDefault,
-        choices: this.distros[i].versions,
-        when: this.distros[i].whenCallback
-      };
-      prompts.push(version);
-    }
+    var prompts = require('../lib/prompts');
+    prompts = _.filter(prompts, function (item) {
+      return _.isUndefined(self.options[item.name]);
+    });
 
     this.prompt(prompts, function (props) {
       this.drupalDistro = props.drupalDistro;
