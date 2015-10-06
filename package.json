@@ -15,7 +15,8 @@
     "test": "mocha"
   },
   "files": [
-    "app"
+    "app",
+    "lib"
   ],
   "keywords": [
     "build",
