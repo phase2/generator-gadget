@@ -12,8 +12,8 @@ module.exports.generate = function(yo) {
   var distro = yo.distros[yo.drupalDistro];
 
   var tokens = {
-    title: labelMaker(yo.props.name),
-    description: yo.props.description,
+    title: labelMaker(yo.props.projectName),
+    description: yo.props.projectDescription,
     distroDescription: distro.description
   };
 

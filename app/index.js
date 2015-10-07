@@ -4,6 +4,7 @@ var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var path = require('path');
+var _ = require('lodash');
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
@@ -18,39 +19,18 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   prompting: function () {
+    var self = this;
     var done = this.async();
-    var prompts = require('../lib/questions');
 
-    var chooseDistro = {
-      type: 'list',
-      name: 'drupalDistro',
-      message: 'Which ' + chalk.red('Drupal distribution') + ' would you like to use?',
-      default: 'drupal',
-      choices: []
-    };
-
-    for (var i in this.distros) {
-      chooseDistro.choices.push(this.distros[i].option);
-    }
-
-    prompts.push(chooseDistro);
-
-    for (var i in this.distros) {
-      var version = {
-        type: 'list',
-        name: 'drupalDistroVersion-' + this.distros[i].id,
-        message: 'Which version of ' + chalk.red(this.distros[i].option.name) + ' would you like to use?',
-        default: this.distros[i].versionDefault,
-        choices: this.distros[i].versions,
-        when: this.distros[i].whenCallback
-      };
-      prompts.push(version);
-    }
+    var prompts = require('../lib/prompts');
+    prompts = _.filter(prompts, function (item) {
+      return _.isUndefined(self.options[item.name]);
+    });
 
     this.prompt(prompts, function (props) {
       this.drupalDistro = props.drupalDistro;
       this.drupalDistroVersion = props['drupalDistroVersion-' + this.drupalDistro];
-      this.props = props;
+      this.props = _.assign(props, this.options);
 
       this.log("\nOk, I'm going to start assembling this project...");
       done();
@@ -119,16 +99,16 @@ module.exports = yeoman.generators.Base.extend({
         pkg.dependencies['grunt-drupal-tasks'] = this.npmVersion;
       }
 
-      pkg.name = this.props.name;
-      pkg.description = this.props.description;
+      pkg.name = this.props.projectName;
+      pkg.description = this.props.projectDescription;
 
       this.fs.writeJSON('package.json', pkg);
     },
 
     composerJson: function () {
       var composer = this.fs.readJSON('composer.json');
-      composer.name = this.props.name;
-      composer.description = this.props.description;
+      composer.name = this.props.projectName;
+      composer.description = this.props.projectDescription;
       this.fs.writeJSON('composer.json', composer);
     },
 
