@@ -28,9 +28,9 @@ module.exports = yeoman.generators.Base.extend({
     });
 
     this.prompt(prompts, function (props) {
-      this.drupalDistro = props.drupalDistro;
-      this.drupalDistroVersion = props['drupalDistroVersion-' + this.drupalDistro];
       this.props = _.assign(props, this.options);
+      this.drupalDistro = this.props.drupalDistro;
+      this.drupalDistroVersion = this.props['drupalDistroVersion-' + this.drupalDistro];
 
       this.log("\nOk, I'm going to start assembling this project...");
       done();
