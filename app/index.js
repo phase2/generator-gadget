@@ -149,6 +149,13 @@ module.exports = yeoman.generators.Base.extend({
       this.fs.writeJSON('Gruntconfig.json', gcfg);
     },
 
+    gruntfile: function () {
+      this.fs.copy(
+        this.templatePath('Gruntfile.js'),
+        this.destinationPath('Gruntfile.js')
+      );
+    },
+
     readme: function () {
       require('./readme').generate(this);
     },
