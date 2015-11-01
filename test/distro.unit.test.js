@@ -9,8 +9,6 @@ describe('Distribution Plugins', function() {
   }
 });
 
-
-
 function testPluginConformance(id, distro) {
   describe('have an ' + id + ' implementation', function() {
     it('should have a complete definition', function(done) {
@@ -21,7 +19,6 @@ function testPluginConformance(id, distro) {
       assert(distro.versions);
       assert(distro.versions.length > 0);
       assert(distro.versionDefault);
-      assert(distro.whenCallback);
       assert(distro.releaseVersion);
       assert(distro.drushMakeFile);
       done();
@@ -43,11 +40,5 @@ function testPluginConformance(id, distro) {
       assert(false)
       done();
     });
-
-    it('should correctly identify the current distro in the whenCallback (variable scope workaround)', function(done) {
-      assert(distro.whenCallback({drupalDistro: id}));
-      done();
-    });
   });
 }
-
