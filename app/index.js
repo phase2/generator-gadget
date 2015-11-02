@@ -39,7 +39,7 @@ module.exports = yeoman.generators.Base.extend({
   // Install Grunt Drupal Tasks, either the latest published version or the
   // current development version in the master branch.
   installGDT: function() {
-    require('./gdt')(this).install();
+    //require('./gdt')(this).install();
   },
 
   // Determine the latest stable release for the requested Drupal core version.
@@ -62,7 +62,7 @@ module.exports = yeoman.generators.Base.extend({
       }
       options.drupalDistroRelease = version;
       done();
-    });
+    }.bind(this));
   },
 
   writing: {
@@ -156,12 +156,14 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     readme: function () {
-      this.fs.copyTpl(
-        this.templatePath('README.md'),
-        this.destinationPath('README.md'),
-        // Extracted to facilitate parallel README generation by a parent.
-        require('../lib/util').tokens(options)
-      );
+      if (!options['skip-readme']) {
+        this.fs.copyTpl(
+          this.templatePath('README.md'),
+          this.destinationPath('README.md'),
+          // Extracted to facilitate parallel README generation by a parent.
+          require('../lib/util').tokens(options)
+        );
+      }
     },
 
     drushMakefile: function () {
@@ -174,7 +176,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   install: function () {
-    if (!this.options['skip-install']) {
+    if (!options['skip-install']) {
       this.npmInstall();
     }
   },
