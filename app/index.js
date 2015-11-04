@@ -6,6 +6,8 @@ var yosay = require('yosay');
 var path = require('path');
 var _ = require('lodash');
 
+var options = {};
+
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
     if (!this.options.skipWelcome) {
@@ -28,10 +30,7 @@ module.exports = yeoman.generators.Base.extend({
     });
 
     this.prompt(prompts, function (props) {
-      this.props = _.assign(props, this.options);
-      this.drupalDistro = this.props.drupalDistro;
-      this.drupalDistroVersion = this.props['drupalDistroVersion-' + this.drupalDistro];
-
+      options = _.assign(props, this.options);
       this.log("\nOk, I'm going to start assembling this project...");
       done();
     }.bind(this));
@@ -40,28 +39,28 @@ module.exports = yeoman.generators.Base.extend({
   // Install Grunt Drupal Tasks, either the latest published version or the
   // current development version in the master branch.
   installGDT: function() {
-    require('./gdt')(this).install();
+    //require('./gdt')(this).install();
   },
 
   // Determine the latest stable release for the requested Drupal core version.
   getDistroRelease: function () {
     // Provide a fallback value in case the request fails.
-    this.drupalDistroRelease = this.drupalDistroVersion;
+    options.drupalDistroRelease = options.drupalDistroVersion;
 
     // Handle version used by updates.drupal.org for 8.x.x releases.
-    var drupalUpdatesVersion = this.drupalDistroVersion;
-    if (drupalUpdatesVersion.match(/^8\.\d+\.x$/)) {
-      drupalUpdatesVersion = '8.x';
+    var majorVersionForUpdateSystem = options.drupalDistroVersion;
+    if (majorVersionForUpdateSystem.match(/^8\.\d+\.x$/)) {
+      majorVersionForUpdateSystem = '8.x';
     }
 
     // Find the latest stable release for the Drupal distro version.
     var done = this.async();
-    this.distros[this.drupalDistro].releaseVersion(drupalUpdatesVersion, done, function(err, version, done) {
+    options.drupalDistro.releaseVersion(majorVersionForUpdateSystem, done, function(err, version, done) {
       if (err) {
         this.log.error(err);
         return done(err);
       }
-      this.drupalDistroRelease = version;
+      options.drupalDistroRelease = version;
       done();
     }.bind(this));
   },
@@ -74,7 +73,7 @@ module.exports = yeoman.generators.Base.extend({
       );
 
       this.directory(
-        this.templatePath(path.resolve(this.drupalDistro, this.drupalDistroVersion)),
+        this.templatePath(path.resolve(options.drupalDistro.id, options.drupalDistroVersion)),
         this.destinationPath()
       );
     },
@@ -99,16 +98,16 @@ module.exports = yeoman.generators.Base.extend({
         pkg.dependencies['grunt-drupal-tasks'] = this.npmVersion;
       }
 
-      pkg.name = this.props.projectName;
-      pkg.description = this.props.projectDescription;
+      pkg.name = options.projectName;
+      pkg.description = options.projectDescription;
 
       this.fs.writeJSON('package.json', pkg);
     },
 
     composerJson: function () {
       var composer = this.fs.readJSON('composer.json');
-      composer.name = this.props.projectName;
-      composer.description = this.props.projectDescription;
+      composer.name = options.projectName;
+      composer.description = options.projectDescription;
       this.fs.writeJSON('composer.json', composer);
     },
 
@@ -120,30 +119,30 @@ module.exports = yeoman.generators.Base.extend({
       }
 
       // Process theme options and insert into Gruntconfig.json.
-      if (this.options.themeName && this.options.themePath) {
+      if (options.themeName && options.themePath) {
         var themeOpts = {
-          path: "<%= config.srcPaths.drupal %>/themes/" + this.options.themeName
+          path: "<%= config.srcPaths.drupal %>/themes/" + options.themeName
         };
 
-        if (this.options.themeType === 'compass') {
+        if (options.themeType === 'compass') {
           themeOpts.compass = true;
         }
-        else if (this.options.themeType === 'grunt' && this.options.themeGruntTask) {
+        else if (options.themeType === 'grunt' && options.themeGruntTask) {
           themeOpts.grunt = true;
-          themeOpts.gruntTask = this.options.themeGruntTask;
+          themeOpts.gruntTask = options.themeGruntTask;
         }
 
-        if (this.options.themeScripts) {
-          themeOpts.scripts = this.options.themeScripts;
+        if (options.themeScripts) {
+          themeOpts.scripts = options.themeScripts;
         }
 
         if (!gcfg.hasOwnProperty('themes')) {
           gcfg.themes = {};
         }
-        gcfg.themes[this.options.themeName] = themeOpts;
+        gcfg.themes[options.themeName] = themeOpts;
       }
 
-      gcfg.serve = { "profile": this.distros[this.drupalDistro].profile };
+      gcfg.serve = { "profile": options.drupalDistro.profile };
       gcfg.generated = { name: this.pkg.name, version: this.pkg.version };
 
       this.fs.writeJSON('Gruntconfig.json', gcfg);
@@ -157,24 +156,35 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     readme: function () {
-      require('./readme').generate(this);
+      if (!options['skip-readme']) {
+        this.fs.copyTpl(
+          this.templatePath('README.md'),
+          this.destinationPath('README.md'),
+          // Extracted to facilitate parallel README generation by a parent.
+          require('../lib/util').tokens(options)
+        );
+      }
     },
 
     drushMakefile: function () {
-      this.log('Setting up Drush makefile to install Drupal Distribution ' + this.drupalDistro + ' version ' + chalk.red(this.drupalDistroRelease) + '.\n');
+      this.log('Setting up Drush makefile to install Drupal Distribution '
+        + options.drupalDistro.option.name + ' version '
+        + chalk.red(options.drupalDistroRelease) + '.\n');
       var done = this.async();
-      this.distros[this.drupalDistro].drushMakeFile(this, done);
+      options.drupalDistro.drushMakeFile(this, options, done);
     }
   },
 
   install: function () {
-    if (!this.options['skip-install']) {
+    if (!options['skip-install']) {
       this.npmInstall();
     }
   },
 
   end: function () {
-    this.log('\nGadget has ' + chalk.red('finished') + ' setting up the Drupal project scaffold with Grunt Drupal Tasks!\n');
-    this.log('Run `' + chalk.red('grunt') + '` to run the first build of this project.\n');
+    this.log('\nGadget has ' + chalk.red('finished')
+      + ' setting up the Drupal project scaffold with Grunt Drupal Tasks!\n');
+    this.log('Run `' + chalk.red('grunt')
+      + '` to run the first build of this project.\n');
   }
 });

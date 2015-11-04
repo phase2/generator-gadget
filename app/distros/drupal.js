@@ -18,18 +18,14 @@ function init() {
 
   module.description = 'This project is built directly on Drupal Core, it is not leveraging other distributions. For more information visit the [Drupal Project homepage](http://drupal.org/project/drupal).';
 
-  module.whenCallback = function(answers) {
-    return answers.drupalDistro == 'drupal';
-  };
-
   module.releaseVersion = function(majorVersion, done, cb) {
     require('../../lib/drupalProjectVersion').latestRelease(module.id, majorVersion, done, cb);
   };
 
-  module.drushMakeFile = function(yo, done) {
+  module.drushMakeFile = function(yo, options, done) {
     var tokens = {
-      drupalDistroRelease: yo.drupalDistroRelease,
-      coreCompatibility: yo.drupalDistroVersion
+      drupalDistroRelease: options.drupalDistroRelease,
+      coreCompatibility: options.drupalDistroVersion
     };
     yo.fs.copyTpl(
       yo.templatePath('drupal/project.make'),
