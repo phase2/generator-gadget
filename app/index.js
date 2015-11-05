@@ -142,7 +142,7 @@ module.exports = yeoman.generators.Base.extend({
         gcfg.themes[options.themeName] = themeOpts;
       }
 
-      gcfg.serve = { "profile": options.drupalDistro.profile };
+      gcfg.project = { "profile": options.drupalDistro.profile };
       gcfg.generated = { name: this.pkg.name, version: this.pkg.version };
 
       this.fs.writeJSON('Gruntconfig.json', gcfg);
