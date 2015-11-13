@@ -8,3 +8,5 @@ defaults[projects][type] = "module"
 projects[drupal][version] = "<%= drupalDistroRelease %>"
 
 ;; Project-specific Dependencies
+
+<% if (memcache) { %><%- include ../make-memcache -%><% } %>

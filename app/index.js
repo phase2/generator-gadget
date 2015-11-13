@@ -39,7 +39,7 @@ module.exports = yeoman.generators.Base.extend({
   // Install Grunt Drupal Tasks, either the latest published version or the
   // current development version in the master branch.
   installGDT: function() {
-    require('./gdt')(this).install();
+    //require('./gdt')(this).install();
   },
 
   // Determine the latest stable release for the requested Drupal core version.
@@ -48,14 +48,15 @@ module.exports = yeoman.generators.Base.extend({
     options.drupalDistroRelease = options.drupalDistroVersion;
 
     // Handle version used by updates.drupal.org for 8.x.x releases.
-    var majorVersionForUpdateSystem = options.drupalDistroVersion;
-    if (majorVersionForUpdateSystem.match(/^8\.\d+\.x$/)) {
-      majorVersionForUpdateSystem = '8.x';
+    options.majorVersionForUpdateSystem = options.drupalDistroVersion;
+    if (options.majorVersionForUpdateSystem.match(/^8\.\d+\.x$/)) {
+      options.majorVersionForUpdateSystem = '8.x';
     }
+
 
     // Find the latest stable release for the Drupal distro version.
     var done = this.async();
-    options.drupalDistro.releaseVersion(majorVersionForUpdateSystem, done, function(err, version, done) {
+    options.drupalDistro.releaseVersion(options.majorVersionForUpdateSystem, done, function(err, version, done) {
       if (err) {
         this.log.error(err);
         return done(err);
@@ -63,6 +64,22 @@ module.exports = yeoman.generators.Base.extend({
       options.drupalDistroRelease = version;
       done();
     }.bind(this));
+  },
+
+  memcacheVersion: function() {
+    if (options.cacheInternal == 'memcache') {
+      var done = this.async();
+      require('../lib/drupalProjectVersion')
+        .latestRelease('memcache', options.majorVersionForUpdateSystem, done, function(err, version, done) {
+          if (err) {
+            this.log.error(err);
+            return done(err);
+          }
+          options.memcacheVersion = version.substr(4);
+          done();
+        }.bind(this)
+      );
+    }
   },
 
   writing: {

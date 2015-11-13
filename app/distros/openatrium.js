@@ -1,3 +1,4 @@
+var request = require('request');
 
 function init() {
   var module = {
@@ -28,8 +29,15 @@ function init() {
     var tokens = {
       drupalDistroName: module.id,
       drupalDistroRelease: releaseVersion,
-      coreCompatibility: options.drupalDistroVersion
+      coreCompatibility: options.drupalDistroVersion,
+      memcache: false
     };
+
+    if (options['memcacheVersion']) {
+      tokens.memcache = true;
+      tokens.memcacheVersion = options['memcacheVersion'];
+    }
+
     yo.fs.copyTpl(
       yo.templatePath('project-distro.make'),
       yo.destinationPath('src/project.make'),
@@ -38,13 +46,12 @@ function init() {
 
     // The Core Makefile is managed by Atrium and varies by release.
     var filename = 'drupal-org-core.make?id=' + options.drupalDistroRelease;
-    yo.fetch(
-      'http://cgit.drupalcode.org/openatrium/plain/' + filename,
-      'src',
-      function () {
-        yo.fs._copySingle('src/' + filename, 'src/drupal-org-core.make');
-        yo.fs.delete('src/' + filename);
-        done();
+    request('http://cgit.drupalcode.org/openatrium/plain/' + filename,
+      function (error, response, body) {
+        if (!error && response.statusCode == 200 && body.length) {
+          yo.fs.write(yo.destinationPath('src/drupal-org-core.make'), body);
+          done();
+        }
       }
     );
   }
