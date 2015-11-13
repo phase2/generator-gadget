@@ -39,7 +39,7 @@ module.exports = yeoman.generators.Base.extend({
   // Install Grunt Drupal Tasks, either the latest published version or the
   // current development version in the master branch.
   installGDT: function() {
-    require('./gdt')(this).install();
+    //require('./gdt')(this).install();
   },
 
   // Determine the latest stable release for the requested Drupal core version.
@@ -63,6 +63,22 @@ module.exports = yeoman.generators.Base.extend({
       options.drupalDistroRelease = version;
       done();
     }.bind(this));
+  },
+
+  memcacheVersion: function() {
+    if (options.cacheInternal == 'memcache') {
+      var done = this.async();
+      require('../lib/drupalProjectVersion')
+        .latestRelease('memcache', '7.x', done, function(err, version, done) {
+          if (err) {
+            this.log.error(err);
+            return done(err);
+          }
+          options.memcacheVersion = version;
+          done();
+        }.bind(this)
+      );
+    }
   },
 
   writing: {

@@ -25,8 +25,15 @@ function init() {
   module.drushMakeFile = function(yo, options, done) {
     var tokens = {
       drupalDistroRelease: options.drupalDistroRelease,
-      coreCompatibility: options.drupalDistroVersion
+      coreCompatibility: options.drupalDistroVersion,
+      memcache: false
     };
+
+    if (options['memcacheVersion']) {
+      tokens.memcache = true;
+      tokens.memcacheVersion = options['memcacheVersion'];
+    }
+
     yo.fs.copyTpl(
       yo.templatePath('drupal/project.make'),
       yo.destinationPath('src/project.make'),
