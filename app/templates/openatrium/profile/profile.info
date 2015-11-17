@@ -1,0 +1,107 @@
+name = <%= name %>
+distribution_name = <%= title %>
+description = <%= description %>
+core = 7.x
+exclusive = TRUE
+
+version = 0.0.1
+
+base[] = openatrium
+files[] = <%= name %>.profile
+
+;
+; Drupal Core
+;
+
+dependencies[] = menu
+dependencies[] = image
+dependencies[] = list
+dependencies[] = number
+dependencies[] = options
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = search
+dependencies[] = shortcut
+dependencies[] = field
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = update
+
+;
+; Panopoly
+;
+
+; Panopoly Foundation
+dependencies[] = panopoly_core
+dependencies[] = panopoly_images
+dependencies[] = panopoly_theme
+dependencies[] = panopoly_magic
+dependencies[] = panopoly_widgets
+dependencies[] = panopoly_admin
+dependencies[] = panopoly_users
+
+; Panopoly Toolset
+dependencies[] = panopoly_pages
+dependencies[] = panopoly_search
+dependencies[] = panopoly_wysiwyg
+
+; Panopoly Recommended - Admin
+dependencies[] = navbar
+dependencies[] = backports
+dependencies[] = simplified_menu_admin
+dependencies[] = save_draft
+dependencies[] = module_filter
+dependencies[] = date_popup_authored
+;;dependencies[] = advagg
+
+;
+; Open Atrium 2.0
+;
+
+; Open Atrium Core
+dependencies[] = oa_core
+dependencies[] = oa_access
+dependencies[] = oa_adminrole
+dependencies[] = oa_buttons
+dependencies[] = oa_config
+dependencies[] = oa_date
+dependencies[] = oa_diff
+dependencies[] = oa_layouts
+dependencies[] = oa_messages
+dependencies[] = oa_news
+dependencies[] = oa_panopoly_users
+dependencies[] = oa_permissions
+dependencies[] = oa_responsive_regions
+dependencies[] = oa_river
+dependencies[] = oa_section_context
+dependencies[] = oa_sections
+dependencies[] = oa_teams
+dependencies[] = oa_update
+dependencies[] = oa_users
+dependencies[] = oa_variables
+dependencies[] = oa_widgets
+dependencies[] = oa_wysiwyg
+
+; Open Atrium Theme
+dependencies[] = radix_layouts
+dependencies[] = bootstrap_library
+
+; Open Atrium Contrib
+dependencies[] = apps
+dependencies[] = features_override
+dependencies[] = feeds
+dependencies[] = job_scheduler
+dependencies[] = libraries
+dependencies[] = variable
+
+; Open Atrium Contrib (optional)
+;;dependencies[] = panels_customerror
+;;dependencies[] = ultimate_cron
+
+;
+; <%= title %>
+;
+
+; Open Atrium
+dependencies[] = oa_styles
+dependencies[] = oa_toolbar

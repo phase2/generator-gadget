@@ -1,0 +1,23 @@
+<?php
+/**
+ * @file
+ * Performs actions to install and update a site based on this profile.
+ */
+
+require_once 'profiles/openatrium/openatrium.install';
+
+/**
+ * Implements hook_install().
+ */
+function <%= nameFunc %>_install() {
+  // @TODO: replace with <%= title %> theme setup.
+  _openatrium_set_up_theme();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function <%= nameFunc %>_requirements($phase) {
+  $requirements = openatrium_requirements($phase);
+  return $requirements;
+}
