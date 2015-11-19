@@ -84,14 +84,18 @@ module.exports = yeoman.generators.Base.extend({
 
   writing: {
     template: function () {
-      this.directory(
+      this._directory(
         this.destinationPath('node_modules/grunt-drupal-tasks/example'),
-        this.destinationPath()
+        this.destinationPath(),
+        null,
+        true
       );
 
-      this.directory(
+      this._directory(
         this.templatePath(path.resolve(options.drupalDistro.id, options.drupalDistroVersion)),
-        this.destinationPath()
+        this.destinationPath(),
+        null,
+        true
       );
     },
 
