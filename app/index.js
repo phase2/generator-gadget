@@ -83,22 +83,20 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writing: {
-    template: function () {
-      this.directory(
-        this.destinationPath('node_modules/grunt-drupal-tasks/example'),
-        this.destinationPath()
-      );
-
-      this.directory(
-        this.templatePath(path.resolve(options.drupalDistro.id, options.drupalDistroVersion)),
-        this.destinationPath()
-      );
+    distroAdditions: function () {
+      var srcFiles = path.resolve(this.sourceRoot(), 'drupal', options.drupalDistro.id, options.drupalDistroVersion);
+      if (this.fs.exists(srcFiles)) {
+        this.fs.copy(
+          srcFiles,
+          this.destinationRoot()
+        );
+      }
     },
 
-    gitignore: function () {
-      this.fs.move(
-        this.destinationPath('gitignore'),
-        this.destinationPath('.gitignore')
+    projectResources: function () {
+      this.fs.copy(
+        this.templatePath('project'),
+        this.destinationRoot()
       );
     },
 
