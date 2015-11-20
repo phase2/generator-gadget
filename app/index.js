@@ -10,14 +10,15 @@ var options = {};
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
+    this.pkg = require('../package.json');
+    this.distros = require('./distros');
+
     if (!this.options.skipWelcome) {
       this.log(yosay(
-        'Welcome to ' + chalk.red('Gadget') + ', the gnarly generator for Grunt Drupal Tasks!'
+        'Welcome to ' + chalk.red('Gadget ') + this.pkg.version + ', the gnarly generator for Grunt Drupal Tasks!'
       ));
     }
 
-    this.pkg = require('../package.json');
-    this.distros = require('./distros');
   },
 
   prompting: function () {
