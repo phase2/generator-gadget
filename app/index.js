@@ -25,6 +25,11 @@ module.exports = yeoman.generators.Base.extend({
     var self = this;
     var done = this.async();
 
+    if (this.options.hasOwnProperty('drupalDistro') && typeof this.options.drupalDistro === 'string') {
+      var distros = require('../app/distros');
+      this.options.drupalDistro = distros[this.options.drupalDistro];
+    }
+
     var prompts = require('../lib/prompts');
     prompts = _.filter(prompts, function (item) {
       return _.isUndefined(self.options[item.name]);
