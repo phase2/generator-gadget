@@ -4,7 +4,6 @@ var assert = require('yeoman-generator').assert;
 var helpers = require('yeoman-generator').test;
 var os = require('os');
 var path = require('path');
-var spawn = require('yeoman-generator/lib/actions/spawn_command');
 
 describe('gadget:app', function () {
   before(function (done) {
@@ -31,14 +30,5 @@ describe('gadget:app', function () {
       // Behat example tests are present.
       'test/features/example.feature'
     ]);
-  });
-
-  it('successfully completes the grunt-drupal-tasks build process', function(done) {
-    // This is directly handled here so test troubleshooting has ready access to
-    // the output of `npm install`.
-    spawn.spawnCommandSync('npm', [ 'install' ]);
-    var result = spawn.spawnCommandSync('grunt', [ '--timer' ]);
-    assert(!result.status && !result.stderr);
-    done();
   });
 });
