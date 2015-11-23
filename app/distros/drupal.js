@@ -35,7 +35,7 @@ function init() {
     }
 
     yo.fs.copyTpl(
-      yo.templatePath('drupal/project.make'),
+      yo.templatePath('drupal/drupal/project.make'),
       yo.destinationPath('src/project.make'),
       tokens
     );

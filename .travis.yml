@@ -6,13 +6,8 @@ node_js:
   - '0.12'
   - '0.10'
 install:
-  - npm install -g grunt-cli mocha yo
+  - npm install -g grunt-cli mocha
   - ls -lRa
 script:
   - npm install
   - npm test
-  - npm link
-  - mkdir test_run
-  - cd test_run
-  - yo gadget --projectName=drupal8 --projectDescription="test drupal8 project" --drupalDistro=drupal --drupalDistroVersion=8.x
-  - grunt
