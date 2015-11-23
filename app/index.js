@@ -85,7 +85,12 @@ module.exports = yeoman.generators.Base.extend({
   writing: {
     distroAdditions: function () {
       var srcFiles = path.resolve(this.sourceRoot(), 'drupal', options.drupalDistro.id, options.drupalDistroVersion);
-      if (this.fs.exists(srcFiles)) {
+
+      var fs = require('fs');
+      if (
+        (fs.existsSync && fs.existsSync(srcFiles))
+        || fs.accessSync(srcFiles, fs.R_OK)
+      ) {
         this.fs.copy(
           srcFiles,
           this.destinationRoot()
