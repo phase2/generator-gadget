@@ -78,13 +78,23 @@ module.exports = yeoman.generators.Base.extend({
     },
 
     gdtBase: function() {
-      this.fs.copy(this.templatePath('gdt'), this.destinationRoot());
+      this.fs.copy(
+        path.resolve(this.templatePath('gdt'), '**', '*'),
+        this.destinationRoot(),
+        {
+          globOptions: { dot: true }
+        }
+      );
     }
   },
 
   writing: {
     distroAdditions: function () {
-      var srcFiles = path.resolve(this.sourceRoot(), 'drupal', options.drupalDistro.id, options.drupalDistroVersion);
+      var srcFiles = path.resolve(
+        this.templatePath('drupal'),
+        options.drupalDistro.id,
+        options.drupalDistroVersion
+      );
 
       var fs = require('fs');
       if (
@@ -92,8 +102,11 @@ module.exports = yeoman.generators.Base.extend({
         || fs.accessSync(srcFiles, fs.R_OK)
       ) {
         this.fs.copy(
-          srcFiles,
-          this.destinationRoot()
+          path.resolve(srcFiles),
+          this.destinationRoot(),
+          {
+            globOptions: { dot: true }
+          }
         );
       }
     },
