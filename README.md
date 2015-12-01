@@ -19,7 +19,7 @@ system with the Grunt Drupal Tasks kit.
 
 ## Requirements
 
-* Install _Node.js v0.10.0 or better_ either using a
+* Install _Node.js v0.12.0 or better_ either using a
 <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">package manager</a>
 like apt-get, brew, or yum or a
 <a href="http://nodejs.org/download/">standalone installer</a>.
