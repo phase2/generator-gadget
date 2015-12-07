@@ -8,7 +8,7 @@
 
 ## Features
 
-Gadget will set up a Drupal project with the site skeleton and tools to build your project and configure your build 
+Gadget will set up a Drupal project with the site skeleton and tools to build your project and configure your build
 system with the Grunt Drupal Tasks kit.
 
 * Automatically uses the latest version of Grunt Drupal Tasks.
@@ -24,16 +24,16 @@ system with the Grunt Drupal Tasks kit.
 like apt-get, brew, or yum or a
 <a href="http://nodejs.org/download/">standalone installer</a>.
 
-* Once _Node.js_ is installed, use _npm_ to install the generator. If you have 
-not used a Yeoman generator before install the 
+* Once _Node.js_ is installed, use _npm_ to install the generator. If you have
+not used a Yeoman generator before install the
 [`yo`](https://www.npmjs.com/package/yo) package as well. [Grunt Drupal Tasks](https://github.com/phase2/grunt-drupal-tasks) requires the [grunt task runner](https://www.npmjs.com/package/grunt-cli) as well.
 
 ```
 npm install -g generator-gadget grunt-cli yo
 ```
 
-Grunt Drupal Tasks leverages a number of additional tools from outside the Node ecosystem, such as <a 
-href="http://php.net">PHP</a>, <a href="http://bundler.io/">Bundler</a>, <a 
+Grunt Drupal Tasks leverages a number of additional tools from outside the Node ecosystem, such as <a
+href="http://php.net">PHP</a>, <a href="http://bundler.io/">Bundler</a>, <a
 href="https://getcomposer.org/download/">Composer</a>, Ruby, and RubyGems. See Grunt-Drupal-Tasks for details.
 
 ## Usage
@@ -49,6 +49,8 @@ yo gadget
 * `--use-master`: Will make a point of leveraging the master version of Grunt Drupal Tasks.
 * `--skip-install`: Will skip running `npm install` at the end of the generation process.
 * `--skip-readme`: Will not generate a README.md. (Useful when you've already hand-crafted the perfect project introduction!)
+* `--skipWelcome`: Skip opening welcome message.
+* `--skipGoodbye`: Skip closing messages.
 
 ## Additional Resources
 

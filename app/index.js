@@ -211,9 +211,11 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function () {
-    this.log('\nGadget has ' + chalk.red('finished')
-      + ' setting up the Drupal project scaffold with Grunt Drupal Tasks!\n');
-    this.log('Run `' + chalk.red('grunt')
-      + '` to run the first build of this project.\n');
+    if (!options['skipGoodbye']) {
+      this.log('\nGadget has ' + chalk.red('finished')
+        + ' setting up the Drupal project scaffold with Grunt Drupal Tasks!\n');
+      this.log('Run `' + chalk.red('grunt')
+        + '` to start the first build of this project.\n');
+    }
   }
 });
