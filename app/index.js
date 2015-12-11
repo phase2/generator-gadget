@@ -6,23 +6,30 @@ var yosay = require('yosay');
 var path = require('path');
 var _ = require('lodash');
 
+var gadget = require('../lib/util');
+
 var options = {};
 
 module.exports = yeoman.generators.Base.extend({
   initializing: function () {
+    this.pkg = require('../package.json');
+
     if (!this.options.skipWelcome) {
       this.log(yosay(
-        'Welcome to ' + chalk.red('Gadget') + ', the gnarly generator for Grunt Drupal Tasks!'
+        'Welcome to ' + chalk.red.bold('Gadget ' + this.pkg.version)
+        + ', the gnarly generator for Grunt Drupal Tasks!'
       ));
     }
-
-    this.pkg = require('../package.json');
-    this.distros = require('./distros');
   },
 
   prompting: function () {
     var self = this;
     var done = this.async();
+
+    if (this.options.hasOwnProperty('drupalDistro') && typeof this.options.drupalDistro === 'string') {
+      var distros = require('../app/distros');
+      this.options.drupalDistro = distros[this.options.drupalDistro];
+    }
 
     var prompts = require('../lib/prompts');
     prompts = _.filter(prompts, function (item) {
@@ -36,84 +43,96 @@ module.exports = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
-  // Install Grunt Drupal Tasks, either the latest published version or the
-  // current development version in the master branch.
-  installGDT: function() {
-    require('./gdt')(this).install();
-  },
+  configuring: {
+    // Determine the latest stable release for the requested Drupal core version.
+    getDistroRelease: function () {
+      // Provide a fallback value in case the request fails.
+      options.drupalDistroRelease = options.drupalDistroVersion;
 
-  // Determine the latest stable release for the requested Drupal core version.
-  getDistroRelease: function () {
-    // Provide a fallback value in case the request fails.
-    options.drupalDistroRelease = options.drupalDistroVersion;
-
-    // Handle version used by updates.drupal.org for 8.x.x releases.
-    options.majorVersionForUpdateSystem = options.drupalDistroVersion;
-    if (options.majorVersionForUpdateSystem.match(/^8\.\d+\.x$/)) {
-      options.majorVersionForUpdateSystem = '8.x';
-    }
-
-
-    // Find the latest stable release for the Drupal distro version.
-    var done = this.async();
-    options.drupalDistro.releaseVersion(options.majorVersionForUpdateSystem, done, function(err, version, done) {
-      if (err) {
-        this.log.error(err);
-        return done(err);
+      // Handle version used by updates.drupal.org for 8.x.x releases.
+      options.majorVersionForUpdateSystem = options.drupalDistroVersion;
+      if (options.majorVersionForUpdateSystem.match(/^8\.\d+\.x$/)) {
+        options.majorVersionForUpdateSystem = '8.x';
       }
-      options.drupalDistroRelease = version;
-      done();
-    }.bind(this));
-  },
 
-  memcacheVersion: function() {
-    if (options.cacheInternal == 'memcache') {
+      // Find the latest stable release for the Drupal distro version.
       var done = this.async();
-      require('../lib/drupalProjectVersion')
-        .latestRelease('memcache', options.majorVersionForUpdateSystem, done, function(err, version, done) {
-          if (err) {
-            this.log.error(err);
-            return done(err);
-          }
-          options.memcacheVersion = version.substr(4);
-          done();
-        }.bind(this)
+      options.drupalDistro.releaseVersion(options.majorVersionForUpdateSystem, done, function(err, version, done) {
+        if (err) {
+          this.log.error(err);
+          return done(err);
+        }
+        options.drupalDistroRelease = version;
+        done();
+      }.bind(this));
+    },
+
+    memcacheVersion: function() {
+      if (options.cacheInternal == 'memcache') {
+        var done = this.async();
+        require('../lib/drupalProjectVersion')
+          .latestRelease('memcache', options.majorVersionForUpdateSystem, done, function(err, version, done) {
+            if (err) {
+              this.log.error(err);
+              return done(err);
+            }
+            options.memcacheVersion = version.substr(4);
+            done();
+          }.bind(this)
+        );
+      }
+    },
+
+    gdtBase: function() {
+      this.fs.copy(
+        path.resolve(this.templatePath('gdt'), '**', '*'),
+        this.destinationRoot(),
+        {
+          globOptions: { dot: true }
+        }
       );
     }
   },
 
   writing: {
-    template: function () {
-      this.directory(
-        this.destinationPath('node_modules/grunt-drupal-tasks/example'),
-        this.destinationPath()
+    distroAdditions: function () {
+      var srcFiles = path.resolve(
+        this.templatePath('drupal'),
+        options.drupalDistro.id,
+        options.drupalDistroVersion
       );
 
-      this.directory(
-        this.templatePath(path.resolve(options.drupalDistro.id, options.drupalDistroVersion)),
-        this.destinationPath()
-      );
+      var fs = require('fs');
+      if (
+        (fs.existsSync && fs.existsSync(srcFiles))
+        || fs.accessSync(srcFiles, fs.R_OK)
+      ) {
+        this.fs.copy(
+          path.resolve(srcFiles),
+          this.destinationRoot(),
+          {
+            globOptions: { dot: true }
+          }
+        );
+      }
     },
 
-    gitignore: function () {
-      this.fs.move(
-        this.destinationPath('gitignore'),
-        this.destinationPath('.gitignore')
+    projectResources: function () {
+      this.fs.copy(
+        this.templatePath('project'),
+        this.destinationRoot()
       );
     },
 
     packageJson: function () {
       var pkg = this.fs.readJSON('package.json');
 
-      if (!pkg) {
-        //TODO: throw error
-      }
-
-      // If the latest published version of GDT is not used, then update the
-      // project's package.json accordingly.
-      if (this.npmVersion !== 'grunt-drupal-tasks') {
-        pkg.dependencies['grunt-drupal-tasks'] = this.npmVersion;
-      }
+      // Inject grunt-drupal-tasks into the dependency list.
+      pkg.dependencies['grunt-drupal-tasks'] = gadget.npmVersion(
+        'grunt-drupal-tasks',
+        '//github.com/phase2/grunt-drupal-tasks.git',
+        this.options['use-master']
+      );
 
       pkg.name = options.projectName;
       pkg.description = options.projectDescription;
@@ -159,17 +178,10 @@ module.exports = yeoman.generators.Base.extend({
         gcfg.themes[options.themeName] = themeOpts;
       }
 
-      gcfg.project = { "profile": options.drupalDistro.profile };
+      gcfg.project = { 'profile': options.drupalDistro.profile };
       gcfg.generated = { name: this.pkg.name, version: this.pkg.version };
 
       this.fs.writeJSON('Gruntconfig.json', gcfg);
-    },
-
-    gruntfile: function () {
-      this.fs.copy(
-        this.templatePath('Gruntfile.js'),
-        this.destinationPath('Gruntfile.js')
-      );
     },
 
     readme: function () {
@@ -178,7 +190,7 @@ module.exports = yeoman.generators.Base.extend({
           this.templatePath('README.md'),
           this.destinationPath('README.md'),
           // Extracted to facilitate parallel README generation by a parent.
-          require('../lib/util').tokens(options)
+          gadget.tokens(options)
         );
       }
     },
@@ -216,9 +228,11 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   end: function () {
-    this.log('\nGadget has ' + chalk.red('finished')
-      + ' setting up the Drupal project scaffold with Grunt Drupal Tasks!\n');
-    this.log('Run `' + chalk.red('grunt')
-      + '` to run the first build of this project.\n');
+    if (!options['skipGoodbye']) {
+      this.log('\nGadget has ' + chalk.red('finished')
+        + ' setting up the Drupal project scaffold with Grunt Drupal Tasks!\n');
+      this.log('Run `' + chalk.red('grunt')
+        + '` to start the first build of this project.\n');
+    }
   }
 });

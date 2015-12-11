@@ -1,0 +1,28 @@
+# Files produced by bad patch & diff runs
+*~*~
+*.rej
+*.diff
+*.orig
+interdiff*.txt
+
+# Local caches.
+.sass-cache
+
+# IDE artifacts
+*~
+\#*\#
+*.swp
+.DS*
+.project
+.idea
+
+# Upstream dependencies.
+vendor
+node_modules
+.bundle
+
+# Build output
+/build
+
+# Site Content
+/src/sites/*/files
