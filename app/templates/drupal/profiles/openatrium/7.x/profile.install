@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @file
+ * Perform actions to set up the site for this profile.
+ */
+
+
+/**
+ * Implements hook_install_tasks()
+ */
+function openatrium_install_tasks(&$install_state) {
+  $tasks = array();
+
+  $tasks['openatrium_features_revert_all'] = array(
+    'type' => 'normal',
+  );
+
+  // set default permissions
+  $tasks['openatrium_set_permissions'] = array(
+    'type' => 'normal',
+  );
+
+  // // Need to rebuild search index tables since oa_search changes panopoly_search.
+  // $tasks['openatrium_rebuild_search'] = array(
+  //   'type' => 'normal',
+  // );
+
+  // Rebuild node access.
+  $tasks['openatrium_node_access_rebuild'] = array(
+    'type' => 'normal',
+  );
+
+  // Skip tasks if using quickstart.
+  if (!empty($install_state['parameters']['quickstart']) && $install_state['parameters']['quickstart'] == 'quick') {
+    foreach ($tasks as $task_name => $task) {
+      $tasks[$task_name]['run'] = INSTALL_TASK_SKIP;
+    }
+  }
+
+  /*** TASKS BELOW RUN EVEN WITH QUICKSTART ***/
+
+  // Revert bootstrap tour defaults
+  $tasks['openatrium_revert_tours'] = array(
+    'type' => 'normal',
+  );
+
+  return $tasks;
+}

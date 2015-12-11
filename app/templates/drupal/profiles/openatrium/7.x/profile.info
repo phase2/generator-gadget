@@ -1,0 +1,201 @@
+name = <%= projectName %>
+distribution_name = <%= title %>
+description = <%= description %>
+core = 7.x
+exclusive = TRUE
+
+version = 0.0.1
+
+base[] = openatrium
+files[] = <%= projectName %>.profile
+
+;
+; Drupal Core
+;
+
+dependencies[] = menu
+dependencies[] = image
+dependencies[] = list
+dependencies[] = number
+dependencies[] = options
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = search
+dependencies[] = shortcut
+dependencies[] = field
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = update
+
+;
+; Panopoly
+;
+
+; Panopoly Foundation
+dependencies[] = panopoly_core
+dependencies[] = panopoly_images
+dependencies[] = panopoly_theme
+dependencies[] = panopoly_magic
+dependencies[] = panopoly_widgets
+dependencies[] = panopoly_admin
+dependencies[] = panopoly_users
+
+; Panopoly Toolset
+dependencies[] = panopoly_pages
+dependencies[] = panopoly_search
+dependencies[] = panopoly_wysiwyg
+
+; Panopoly Recommended - Admin
+dependencies[] = navbar
+dependencies[] = backports
+dependencies[] = simplified_menu_admin
+dependencies[] = save_draft
+dependencies[] = module_filter
+dependencies[] = date_popup_authored
+dependencies[] = views_ui
+
+; advagg no longer enabled by default
+; enable it if you subtheme oa_radix and have
+; selector issues in Internet Explorer
+;;dependencies[] = advagg
+
+; Open Atrium 2.0 Required Modules
+; See openatrium.profile for list of default Apps to enable
+dependencies[] = oa_core
+
+; oa_core required submodules
+dependencies[] = oa_access
+dependencies[] = oa_adminrole
+dependencies[] = oa_buttons
+dependencies[] = oa_config
+dependencies[] = oa_date
+dependencies[] = oa_diff
+dependencies[] = oa_layouts
+dependencies[] = oa_messages
+dependencies[] = oa_news
+dependencies[] = oa_panopoly_users
+dependencies[] = oa_permissions
+dependencies[] = oa_responsive_regions
+dependencies[] = oa_river
+dependencies[] = oa_section_context
+dependencies[] = oa_sections
+dependencies[] = oa_teams
+dependencies[] = oa_update
+dependencies[] = oa_users
+dependencies[] = oa_variables
+dependencies[] = oa_widgets
+dependencies[] = oa_wysiwyg
+
+; Open Atrium 2.0 Theme required
+dependencies[] = radix_layouts
+dependencies[] = bootstrap_library
+
+;
+; Open Atrium required contrib modules
+;
+dependencies[] = apps
+dependencies[] = features_override
+dependencies[] = feeds
+dependencies[] = job_scheduler
+dependencies[] = libraries
+dependencies[] = variable
+
+; Contrib Optional
+dependencies[] = panels_customerror
+dependencies[] = ultimate_cron
+
+; 
+; Open Atrium 2.0 Optional
+; 
+
+; Enhances admin interface
+dependencies[] = oa_admin
+
+; Improves the normal Drupal admin experience
+dependencies[] = oa_styles
+
+; Provides the breadcrumb navigation, main menu toolbar, space menu toolbar, and drupal admin menu button
+dependencies[] = oa_toolbar
+
+; This module contains contextual tabs customizations for OA
+dependencies[] = oa_contextual_tabs
+
+; Provides custom colors and banners for Spaces
+; dependencies[] = oa_appearance
+
+;  Media improvements for OA
+dependencies[] = oa_media
+
+; Adds sub-space and sub-group support to OA via the og_subgroups module
+dependencies[] = oa_subspaces
+
+; Provides the popup content creation wizard
+; dependencies[] = oa_wizard
+
+; Provides advanced search functionality for OA
+dependencies[] = oa_search
+
+; The Documents and Wiki page plugin
+; dependencies[] = oa_wiki
+
+; Adds advanced file functionality
+; dependencies[] = oa_files
+
+; Provides Events and Calendars
+; dependencies[] = oa_events
+
+; Extends the Open Atrium Events module to provide iCal imports.
+; dependencies[] = oa_events_import
+
+; Provides workflow functionality
+; dependencies[] = oa_worktracker
+
+; Provides Discussion Forums
+; dependencies[] = oa_discussion
+
+; Adds several paragraph styles to the Body field for Related content and Media
+; dependencies[] = oa_related
+
+; Adds the ability to enable clean Comments on content types
+; dependencies[] = oa_comment
+
+; Adds the ability to clone spaces, section, or other content
+; dependencies[] = oa_clone
+
+; Allows you to export and import Space Blueprints
+; dependencies[] = oa_export
+
+; Provides the ability to archive content and restore it later
+; dependencies[] = oa_archive
+
+; Adds the ability to enter a "sandbox" mode for entering test content
+; dependencies[] = oa_sandbox
+
+; Adds notification functionality
+; dependencies[] = oa_notifications
+
+; Adds daily and weekly digests to notification methods
+; dependencies[] = oa_messages_digest
+
+; Enabled HTML Email support for notifications
+; dependencies[] = oa_htmlmail
+
+; Provides the interactive site map
+; dependencies[] = oa_sitemap
+
+; Adds the ability to create popup tours
+; dependencies[] = oa_tour
+
+; Provides the default set of popup tours
+; dependencies[] = oa_tour_defaults
+
+; Adds the Favourite Space menu
+; dependencies[] = oa_favorites
+
+; Contains the default Open Atrium home page
+dependencies[] = oa_home
+
+; Provides branding example
+; dependencies[] = oa_brand
+
+
