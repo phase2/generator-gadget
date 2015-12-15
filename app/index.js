@@ -102,11 +102,7 @@ module.exports = yeoman.generators.Base.extend({
         options.drupalDistroVersion
       );
 
-      var fs = require('fs');
-      if (
-        (fs.existsSync && fs.existsSync(srcFiles))
-        || fs.accessSync(srcFiles, fs.R_OK)
-      ) {
+      if (gadget.fsExistsSync(srcFiles)) {
         this.fs.copy(
           path.resolve(srcFiles),
           this.destinationRoot(),
