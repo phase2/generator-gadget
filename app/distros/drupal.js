@@ -26,12 +26,12 @@ function init() {
     var tokens = {
       drupalDistroRelease: options.drupalDistroRelease,
       coreCompatibility: options.drupalDistroVersion,
-      memcache: false
+      cache: false,
     };
 
-    if (options['memcacheVersion']) {
-      tokens.memcache = true;
-      tokens.memcacheVersion = options['memcacheVersion'];
+    if (options['cacheVersion']) {
+      tokens.cache = options['cacheInternal'];
+      tokens.cacheVersion = options['cacheVersion'];
     }
 
     yo.fs.copyTpl(

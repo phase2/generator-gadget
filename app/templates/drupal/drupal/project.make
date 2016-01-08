@@ -9,4 +9,4 @@ projects[drupal][version] = "<%= drupalDistroRelease %>"
 
 ;; Project-specific Dependencies
 
-<% if (memcache) { %><%- include ../make-memcache -%><% } %>
+<% if (cache) { %><%- include ../make-cache -%><% } %>

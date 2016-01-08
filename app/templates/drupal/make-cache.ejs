@@ -1,0 +1,13 @@
+; Provides cache drivers for <%= cache %>. Module installation not required.
+projects[<%= cache %>][version] = "<%= cacheVersion %>"
+
+<% if (cache == 'redis') { -%>
+; Predis
+;; - https://github.com/nrk/predis is a userland Redis client for PHP
+;; - PhpRedis (https://github.com/phpredis/phpredis) is a PHP extension with
+;;   slightly higher performance and should be used if possible.
+libraries[predis][download][type] = "get"
+libraries[predis][download][url] = "https://github.com/nrk/predis/archive/v1.0.3.zip"
+libraries[predis][directory_name] = "predis"
+libraries[predis][type] = "library"
+<% } -%>
