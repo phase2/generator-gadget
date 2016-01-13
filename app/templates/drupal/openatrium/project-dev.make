@@ -27,9 +27,8 @@ includes[] = drupal-org-core.make
 ; before Drush Make begins, then moved Atrium into place after it concludes.
 ;
 ; The copy of Atrium so retrieved is cached in build/cache and it's development
-; makefile is leveraged to build out contrib dependencies.
-
-includes[] = ../build/cache/openatrium/scripts/oa-drush-dev.make
+; makefile is leveraged to build out contrib dependencies via the modified grunt
+; drushmake process.
 
 ;; Project-specific Dependencies
 
