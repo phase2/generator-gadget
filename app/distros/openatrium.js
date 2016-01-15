@@ -30,6 +30,7 @@ function init() {
       drupalDistroName: module.id,
       drupalDistroRelease: releaseVersion,
       coreCompatibility: options.drupalDistroVersion,
+      projectName: options.projectName,
       memcache: false
     };
 
@@ -39,8 +40,20 @@ function init() {
     }
 
     yo.fs.copyTpl(
-      yo.templatePath('drupal/project-distro.make'),
+      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-main.make'),
       yo.destinationPath('src/project.make'),
+      tokens
+    );
+
+    yo.fs.copyTpl(
+      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-dev.make'),
+      yo.destinationPath('src/project-dev.make'),
+      tokens
+    );
+
+    yo.fs.copyTpl(
+      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-specific.make'),
+      yo.destinationPath('src/' + options.projectName + '.make'),
       tokens
     );
 
