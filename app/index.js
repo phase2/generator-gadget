@@ -117,8 +117,12 @@ module.exports = yeoman.generators.Base.extend({
 
     projectResources: function () {
       this.fs.copy(
-        this.templatePath('project'),
-        this.destinationRoot()
+        this.templatePath('project/gitignore'),
+        this.destinationPath('.gitignore')
+      );
+      this.fs.copy(
+        this.templatePath('project/editorconfig'),
+        this.destinationPath('.editorconfig')
       );
     },
 
