@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var assert = require('yeoman-generator').assert;
 var distros = require('../app/distros');
 
@@ -30,14 +31,8 @@ function testPluginConformance(id, distro) {
     });
 
     it('should have a versionDefault in the versions list', function(done) {
-      for(var v in distro.versions) {
-        var item = distro.versions[v];
-        if (item.value === distro.versionDefault) {
-          assert(true);
-          return done();
-        }
-      }
-      assert(false)
+      var versions = _.pluck(distro.versions, 'value');
+      assert(versions.indexOf(distro.versionDefault) !== -1);
       done();
     });
   });

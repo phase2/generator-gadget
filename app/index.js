@@ -38,6 +38,9 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(props, this.options);
+      if (!options['cacheInternal']) {
+        options.cacheInternal = 'database';
+      }
       this.log("\nOk, I'm going to start assembling this project...");
       done();
     }.bind(this));
