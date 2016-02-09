@@ -14,4 +14,4 @@ defaults[projects][type] = "module"
 defaults[projects][subdir] = "contrib"
 defaults[projects][type] = "module"
 
-<% if (memcache) { %><%- include ../make-memcache -%><% } %>
+<% if (cache) { %><%- include ../make-cache -%><% } %>

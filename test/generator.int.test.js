@@ -19,8 +19,9 @@ describe('gadget:app', function () {
       .on('end', done);
   });
 
-  it('creates files for Drupal 8.x', function () {
+  it('creates files for Drupal 8.x', function() {
     assert.file([
+      'README.md',
       // Distribution-specific makefile.
       'src/project.make',
       // gtd scaffolding dotfiles are copying.

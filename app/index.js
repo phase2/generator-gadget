@@ -38,6 +38,9 @@ module.exports = yeoman.generators.Base.extend({
 
     this.prompt(prompts, function (props) {
       options = _.assign(props, this.options);
+      if (!options['cacheInternal']) {
+        options.cacheInternal = 'database';
+      }
       this.log("\nOk, I'm going to start assembling this project...");
       done();
     }.bind(this));
@@ -67,16 +70,18 @@ module.exports = yeoman.generators.Base.extend({
       }.bind(this));
     },
 
-    memcacheVersion: function() {
-      if (options.cacheInternal == 'memcache') {
+    cacheVersion: function() {
+      if (options.cacheInternal != 'database') {
         var done = this.async();
         require('../lib/drupalProjectVersion')
-          .latestRelease('memcache', options.majorVersionForUpdateSystem, done, function(err, version, done) {
+          // the other options for cache are redis and memcache, which happen
+          // to be the names of the contrib modules that integrate with them.
+          .latestRelease(options.cacheInternal, options.majorVersionForUpdateSystem, done, function(err, version, done) {
             if (err) {
               this.log.error(err);
               return done(err);
             }
-            options.memcacheVersion = version.substr(4);
+            options.cacheVersion = version.substr(4);
             done();
           }.bind(this)
         );
