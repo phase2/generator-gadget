@@ -3,7 +3,7 @@
   "description": "Example package.json for a Drupal project built with grunt-drupal-tasks.",
   "version": "0.1.0",
   "engines": {
-    "node": "4.x",
+    "node": ">=0.12.0",
     "npm": "2.x"
   },
   "private": true,
