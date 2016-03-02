@@ -2,7 +2,7 @@ sudo: false
 language: node_js
 node_js:
   - '5'
-  - '4.2'
+  - '4'
   - '0.12'
 install:
   - npm install -g grunt-cli mocha
