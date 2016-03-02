@@ -1,13 +1,13 @@
 'use strict';
 
-var assert = require('yeoman-generator').assert;
-var helpers = require('yeoman-generator').test;
+var assert = require('yeoman-assert');
 var os = require('os');
 var path = require('path');
+var test = require('yeoman-test');
 
 describe('gadget:app', function () {
   before(function (done) {
-    helpers.run(path.join(__dirname, '../app'))
+    test.run(path.join(__dirname, '../app'))
       .inDir(path.join(os.tmpdir(), './temp-test'))
       .withOptions({
         'skip-install': true,
