@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 
     // grunt-drupal-tasks does not provide a clean facilitate to override the
     // Gruntconfig makefile.
-    make_args[1] = 'src/project-dev.make';
+    make_args[1] = 'src/project-dev.make.yml';
     grunt.config.set('drush.make.args', make_args);
 
     // Define the make-atrium job by duplicating the standard make configuration.

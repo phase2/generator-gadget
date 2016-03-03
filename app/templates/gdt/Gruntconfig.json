@@ -1,6 +1,6 @@
 {
   "srcPaths": {
-    "make": "src/project.make",
+    "make": "src/project.make.yml",
     "drupal": "src"
   },
   "domain": "project.vm",

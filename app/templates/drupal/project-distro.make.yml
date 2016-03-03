@@ -1,0 +1,22 @@
+api: 2
+core: <%= coreCompatibility %>
+
+defaults:
+  projects:
+    subdir: contrib
+    type: module
+
+# Drupal Core
+includes:
+  - drupal-org-core.make
+
+# Open Atrium
+projects:
+  <%= drupalDistroName %>:
+    type: profile
+    version: "<%= drupalDistroRelease %>"
+    subdir: ""
+
+# Project-specific Dependencies
+
+<% if (cache) { %><%- include make-cache -%><% } %>
