@@ -1,0 +1,17 @@
+api: 2
+core: <%= coreCompatibility %>
+
+defaults:
+  projects:
+    subdir: contrib
+    type: module
+
+projects:
+
+  #Drupal Core
+  drupal:
+    version: "<%= drupalDistroRelease %>"
+
+  # Project-specific Dependencies
+
+<% if (cache) { %><%- include ../make-cache -%><% } %>

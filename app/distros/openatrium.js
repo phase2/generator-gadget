@@ -40,20 +40,20 @@ function init() {
     }
 
     yo.fs.copyTpl(
-      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-main.make'),
-      yo.destinationPath('src/project.make'),
+      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-main.make.yml'),
+      yo.destinationPath('src/project.make.yml'),
       tokens
     );
 
     yo.fs.copyTpl(
-      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-dev.make'),
-      yo.destinationPath('src/project-dev.make'),
+      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-dev.make.yml'),
+      yo.destinationPath('src/project-dev.make.yml'),
       tokens
     );
 
     yo.fs.copyTpl(
-      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-specific.make'),
-      yo.destinationPath('src/' + options.projectName + '.make'),
+      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-specific.make.yml'),
+      yo.destinationPath('src/' + options.projectName + '.make.yml'),
       tokens
     );
 

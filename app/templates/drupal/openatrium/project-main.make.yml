@@ -1,0 +1,26 @@
+api: 2
+core: <%= coreCompatibility %>
+
+##
+# Build the entire Drupal codebase from an official Atrium release.
+##
+
+defaults:
+  projects:
+    subdir: contrib
+    type: module
+
+includes:
+  ## Drupal Core
+  - drupal-org-core.make
+
+  ## Project-specific Dependencies
+  - <%= projectName %>.make.yml
+
+## Open Atrium
+
+projects:
+  openatrium:
+    type: profile
+    version: "<%= drupalDistroRelease %>"
+    subdir: ''
