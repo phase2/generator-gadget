@@ -142,10 +142,10 @@ module.exports = yeoman.Base.extend({
       pkg.name = options.projectName;
       pkg.description = options.projectDescription;
 
-      if (!pkg['scripts']) {
+      if (!pkg['scripts'] && options['themePath']) {
         pkg.scripts = {};
       }
-      if (!pkg.scripts['postinstall']) {
+      if (!pkg.scripts['postinstall'] && options['themePath']) {
         pkg.scripts['postinstall'] = 'cd ' + options.themePath + ' && npm install';
       }
 
