@@ -23,7 +23,7 @@ describe('gadget:app', function () {
     assert.file([
       'README.md',
       // Distribution-specific makefile.
-      'src/project.make',
+      'src/project.make.yml',
       // gtd scaffolding dotfiles are copying.
       'src/modules/.gitkeep',
       // General-purpose behat.yml is not overridden.
