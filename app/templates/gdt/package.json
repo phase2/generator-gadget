@@ -8,7 +8,9 @@
   },
   "private": true,
   "scripts": {
-    "start": "grunt --timer"
+    "start": "grunt --timer",
+    "stop": "grunt clean:default",
+    "test": "grunt validate && grunt test"
   },
   "dependencies": {
     "grunt": "~0.4.5",
