@@ -7,6 +7,9 @@
     "npm": "2.x"
   },
   "private": true,
+  "scripts": {
+    "start": "grunt --timer"
+  },
   "dependencies": {
     "grunt": "~0.4.5",
     "grunt-drupal-tasks": "~0.9.0",
