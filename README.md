@@ -46,6 +46,8 @@ yo gadget
 
 ## Options
 
+* `--offline`: Will make a best effort to complete generator run, though some generated values
+  may be non-applicable, such as Drupal Core version of "0".
 * `--use-master`: Will make a point of leveraging the master version of Grunt Drupal Tasks.
 * `--skip-install`: Will skip running `npm install` at the end of the generation process.
 * `--skip-readme`: Will not generate a README.md. (Useful when you've already hand-crafted the perfect project introduction!)
