@@ -227,7 +227,7 @@ module.exports = yeoman.Base.extend({
   },
 
   install: function () {
-    if (!options['skip-install']) {
+    if (!options['skip-install'] && !options['offline']) {
       this.npmInstall();
     }
   },
