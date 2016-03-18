@@ -58,33 +58,43 @@ module.exports = yeoman.Base.extend({
         options.majorVersionForUpdateSystem = '8.x';
       }
 
-      // Find the latest stable release for the Drupal distro version.
-      var done = this.async();
-      options.drupalDistro.releaseVersion(options.majorVersionForUpdateSystem, done, function(err, version, done) {
-        if (err) {
-          this.log.error(err);
-          return done(err);
-        }
-        options.drupalDistroRelease = version;
-        done();
-      }.bind(this));
+      if (options['offline']) {
+        options.drupalDistroRelease = 0;
+      }
+      else {
+        // Find the latest stable release for the Drupal distro version.
+        var done = this.async();
+        options.drupalDistro.releaseVersion(options.majorVersionForUpdateSystem, done, function(err, version, done) {
+          if (err) {
+            this.log.error(err);
+            return done(err);
+          }
+          options.drupalDistroRelease = version;
+          done();
+        }.bind(this));
+      }
     },
 
     cacheVersion: function() {
       if (options.cacheInternal != 'database') {
-        var done = this.async();
-        require('../lib/drupalProjectVersion')
-          // the other options for cache are redis and memcache, which happen
-          // to be the names of the contrib modules that integrate with them.
-          .latestRelease(options.cacheInternal, options.majorVersionForUpdateSystem, done, function(err, version, done) {
-            if (err) {
-              this.log.error(err);
-              return done(err);
-            }
-            options.cacheVersion = version.substr(4);
-            done();
-          }.bind(this)
-        );
+        if (options['offline']) {
+          options.cacheVersion = 0;
+        }
+        else {
+          var done = this.async();
+          require('../lib/drupalProjectVersion')
+            // the other options for cache are redis and memcache, which happen
+            // to be the names of the contrib modules that integrate with them.
+            .latestRelease(options.cacheInternal, options.majorVersionForUpdateSystem, done, function(err, version, done) {
+              if (err) {
+                this.log.error(err);
+                return done(err);
+              }
+              options.cacheVersion = version.substr(4);
+              done();
+            }.bind(this)
+          );
+        }
       }
     },
 
@@ -136,7 +146,7 @@ module.exports = yeoman.Base.extend({
       pkg.dependencies['grunt-drupal-tasks'] = gadget.npmVersion(
         'grunt-drupal-tasks',
         '//github.com/phase2/grunt-drupal-tasks.git',
-        this.options['use-master']
+        this.options['use-master'] || this.options['offline']
       );
 
       pkg.name = options.projectName;
@@ -217,7 +227,7 @@ module.exports = yeoman.Base.extend({
   },
 
   install: function () {
-    if (!options['skip-install']) {
+    if (!options['skip-install'] && !options['offline']) {
       this.npmInstall();
     }
   },
