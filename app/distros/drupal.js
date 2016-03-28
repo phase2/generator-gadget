@@ -27,6 +27,7 @@ function init() {
       drupalDistroRelease: options.drupalDistroRelease,
       coreCompatibility: options.drupalDistroVersion,
       cache: false,
+      smtp: false
     };
 
     if (options['cacheVersion']) {

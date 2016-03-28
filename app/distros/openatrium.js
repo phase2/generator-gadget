@@ -31,7 +31,8 @@ function init() {
       drupalDistroRelease: releaseVersion,
       coreCompatibility: options.drupalDistroVersion,
       projectName: options.projectName,
-      cache: false
+      cache: false,
+      smtp: false
     };
 
     if (options['cacheVersion']) {
