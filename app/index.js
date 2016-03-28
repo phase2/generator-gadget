@@ -103,6 +103,28 @@ module.exports = yeoman.Base.extend({
       }
     },
 
+    smtpVersion: function() {
+      if (options.mailhog) {
+        if (options['offline']) {
+          options.smtpVersion = 0;
+        }
+        else {
+          var done = this.async();
+          require('../lib/drupalProjectVersion')
+            .latestRelease('smtp', options.majorVersionForUpdateSystem, done, function(err, version, done) {
+              if (err) {
+                this.log.error(err);
+                return done(err);
+              }
+              options.smtpVersion = version.substr(4);
+
+              done();
+            }.bind(this)
+          );
+        }
+      }
+    },
+
     gdtBase: function() {
       this.fs.copy(
         path.resolve(this.templatePath('gdt'), '**', '*'),

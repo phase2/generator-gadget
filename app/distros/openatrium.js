@@ -39,6 +39,11 @@ function init() {
       tokens.cacheVersion = options['cacheVersion'];
     }
 
+    if (options['smtpVersion']) {
+      tokens.smtp = 'smtp';
+      tokens.smtpVersion = options['smtpVersion'];
+    }
+
     yo.fs.copyTpl(
       yo.templatePath('drupal/' + options.drupalDistro.id + '/project-main.make.yml'),
       yo.destinationPath('src/project.make.yml'),
