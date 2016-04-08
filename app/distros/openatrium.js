@@ -26,13 +26,11 @@ function init() {
   module.drushMakeFile = function(yo, options, done) {
     var releaseVersion = options.drupalDistroRelease.match(/^\d+\.x\-(.+)/)[1];
 
-    var tokens = {
-      drupalDistroName: module.id,
-      drupalDistroRelease: releaseVersion,
-      coreCompatibility: options.drupalDistroVersion,
-      projectName: options.projectName,
-      cache: false
-    };
+    var tokens = options;
+    options.drupalDistroName = module.id,
+    options.drupalDistroRelease = releaseVersion,
+    options.coreCompatibility = options.drupalDistroVersion;
+    options.cache = false;
 
     if (options['cacheVersion']) {
       tokens.cache = options['cacheInternal'];

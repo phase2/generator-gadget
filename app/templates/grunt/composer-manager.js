@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+
   grunt.loadNpmTasks('grunt-shell');
 
   grunt.config.set(['shell', 'composer-manager'], {
@@ -19,7 +20,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.config.set(['shell', 'composer-lock'], {
+  grunt.config.set(['shell', 'composer-update'], {
     command: 'composer update --lock',
     options: {
       execOptions: {
@@ -33,7 +34,7 @@ module.exports = function(grunt) {
     var tasks = [
       'shell:composer-manager',
       'shell:composer-drupal-rebuild',
-      'shell:composer-lock'
+      'shell:composer-update'
     ];
 
     // Add `pre-composer-manager` and `post-composer-manager` options to
@@ -44,6 +45,11 @@ module.exports = function(grunt) {
     grunt.task.run(tasks);
   });
 
+  // Rewire the scaffold task to follow with composer-manager.
+  grunt.task.renameTask('scaffold', 'scaffold-pre-composer-manager');
+  grunt.registerTask('scaffold', ['scaffold-pre-composer-manager', 'composer-manager']);
+
+  // Wire up the `grunt help` command.
   require('grunt-drupal-tasks/lib/help')(grunt).add({
     task: 'composer-manager',
     group: 'Build Process'

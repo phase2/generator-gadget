@@ -8,10 +8,11 @@ defaults:
 
 projects:
 
-  #Drupal Core
+  # Drupal Core
   drupal:
     version: "<%= drupalDistroRelease %>"
 
   # Project-specific Dependencies
-
-<% if (cache) { %><%- include ../make-cache -%><% } %>
+  <% if (cache) { %><%- include ../make-cache -%><% } %>
+  <% if (useComposerManager) { %>composer_manager:
+    version: "<%= composerManagerVersion %>"<% } %>
