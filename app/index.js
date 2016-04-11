@@ -46,6 +46,9 @@ module.exports = yeoman.Base.extend({
       if (!options['cacheInternal']) {
         options.cacheInternal = 'database';
       }
+      if (!options['useComposerManager']) {
+        options.useComposerManager = false;
+      }
       this.log("\nOk, I'm going to start assembling this project...");
       done();
     }.bind(this));
