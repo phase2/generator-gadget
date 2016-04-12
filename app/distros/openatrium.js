@@ -27,10 +27,10 @@ function init() {
     var releaseVersion = options.drupalDistroRelease.match(/^\d+\.x\-(.+)/)[1];
 
     var tokens = options;
-    options.drupalDistroName = module.id,
-    options.drupalDistroRelease = releaseVersion,
-    options.coreCompatibility = options.drupalDistroVersion;
-    options.cache = false;
+    tokens.drupalDistroName = module.id,
+    tokens.drupalDistroRelease = releaseVersion,
+    tokens.coreCompatibility = options.drupalDistroVersion;
+    tokens.cache = false;
 
     if (options['cacheVersion']) {
       tokens.cache = options['cacheInternal'];

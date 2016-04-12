@@ -24,8 +24,8 @@ function init() {
 
   module.drushMakeFile = function(yo, options, done) {
     var tokens = options;
-    options.coreCompatibility = options.drupalDistroVersion;
-    options.cache = false;
+    tokens.coreCompatibility = options.drupalDistroVersion;
+    tokens.cache = false;
 
     if (options['cacheVersion']) {
       tokens.cache = options['cacheInternal'];
