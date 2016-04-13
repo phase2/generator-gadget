@@ -46,6 +46,9 @@ module.exports = yeoman.Base.extend({
       if (!options['cacheInternal']) {
         options.cacheInternal = 'database';
       }
+      if (!options['useComposerManager']) {
+        options.useComposerManager = false;
+      }
       this.log("\nOk, I'm going to start assembling this project...");
       done();
     }.bind(this));
@@ -96,6 +99,27 @@ module.exports = yeoman.Base.extend({
                 return done(err);
               }
               options.cacheVersion = version.substr(4);
+              done();
+            }.bind(this)
+          );
+        }
+      }
+    },
+
+    composerManager: function() {
+      if (options['useComposerManager']) {
+        if (options['offline']) {
+          options.composerManagerVersion = 0;
+        }
+        else {
+          var done = this.async();
+          require('../lib/drupalProjectVersion')
+            .latestRelease('composer_manager', options.majorVersionForUpdateSystem, done, function(err, version, done) {
+              if (err) {
+                this.log.error(err);
+                return done(err);
+              }
+              options.composerManagerVersion = version.substr(4);
               done();
             }.bind(this)
           );
@@ -228,6 +252,15 @@ module.exports = yeoman.Base.extend({
         + chalk.red(options.drupalDistroRelease) + '.\n');
       var done = this.async();
       options.drupalDistro.drushMakeFile(this, options, done);
+    },
+
+    composerManager: function() {
+      if (options['useComposerManager']) {
+        this.fs.copy(
+          this.templatePath('grunt/composer-manager.js'),
+          this.destinationPath('bin/grunt/composer-manager.js')
+        );
+      }
     }
   },
 

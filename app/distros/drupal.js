@@ -23,11 +23,9 @@ function init() {
   };
 
   module.drushMakeFile = function(yo, options, done) {
-    var tokens = {
-      drupalDistroRelease: options.drupalDistroRelease,
-      coreCompatibility: options.drupalDistroVersion,
-      cache: false,
-    };
+    var tokens = options;
+    tokens.coreCompatibility = options.drupalDistroVersion;
+    tokens.cache = false;
 
     if (options['cacheVersion']) {
       tokens.cache = options['cacheInternal'];
