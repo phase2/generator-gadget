@@ -13,8 +13,8 @@
     "test": "grunt validate && grunt test"
   },
   "dependencies": {
-    "grunt": "~0.4.5",
-    "grunt-drupal-tasks": "~0.9.0",
+    "grunt": "^1.0.0",
+    "grunt-drupal-tasks": "~0.10.0",
     "zombie": "^2.5.1"
   }
 }
