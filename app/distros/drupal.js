@@ -27,11 +27,17 @@ function init() {
       drupalDistroRelease: options.drupalDistroRelease,
       coreCompatibility: options.drupalDistroVersion,
       cache: false,
+      smtp: false
     };
 
     if (options['cacheVersion']) {
       tokens.cache = options['cacheInternal'];
       tokens.cacheVersion = options['cacheVersion'];
+    }
+
+    if (options['smtpVersion']) {
+      tokens.smtp = 'smtp';
+      tokens.smtpVersion = options['smtpVersion'];
     }
 
     yo.fs.copyTpl(

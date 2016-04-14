@@ -20,3 +20,4 @@ projects:
 # Project-specific Dependencies
 
 <% if (cache) { %><%- include make-cache -%><% } %>
+<% if (smtp) { %><%- include make-smtp -%><% } %>

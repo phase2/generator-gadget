@@ -31,12 +31,18 @@ function init() {
       drupalDistroRelease: releaseVersion,
       coreCompatibility: options.drupalDistroVersion,
       projectName: options.projectName,
-      cache: false
+      cache: false,
+      smtp: false
     };
 
     if (options['cacheVersion']) {
       tokens.cache = options['cacheInternal'];
       tokens.cacheVersion = options['cacheVersion'];
+    }
+
+    if (options['smtpVersion']) {
+      tokens.smtp = 'smtp';
+      tokens.smtpVersion = options['smtpVersion'];
     }
 
     yo.fs.copyTpl(
