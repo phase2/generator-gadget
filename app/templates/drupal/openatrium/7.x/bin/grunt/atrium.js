@@ -53,7 +53,7 @@ module.exports = function(grunt) {
         // Ensure Atrium's dependencies are placed in the openatrium profile directory tree.
         'drush:make-atrium',
         'clean:default',
-        'copy:tempbuild',
+        require('grunt-drupal-tasks/lib/util').canRsync() ? 'rsync:tempbuild' : 'copy:tempbuild',
         'clean:temp'
       ]);
     });
