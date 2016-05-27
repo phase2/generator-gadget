@@ -13,7 +13,8 @@ system with the Grunt Drupal Tasks kit.
 
 * Automatically uses the latest version of Grunt Drupal Tasks.
 * Select from Drupal 7, Drupal 8, or Atrium 2.
-* Configures a Drush Makefile so your grunt build process is ready to assemble a working codebase immediately! Uses the latest version of Drupal or Atrium.
+* For Drupal 8, creates a `composer.json` file that requires the lates stable Drupal, Drupal Console, and Drush.
+* For Drupal 7, Configures a Drush Makefile so your grunt build process is ready to assemble a working codebase immediately! Uses the latest version of Drupal or Atrium.
 * Provides numerous configuration files for Git, IDE's, and other tools for Drupal best practices out-of-the-box.
 * The entire Grunt Drupal Tasks features list is ready to go, include Behat Testing, Static Analysis, and Continuous-Integration readiness.
 
