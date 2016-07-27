@@ -9,7 +9,8 @@
         "drupal/coder": "^8.2",
         "guzzlehttp/guzzle" : "^6.0@dev",
         "symfony/dependency-injection": "2.7.*",
-        "symfony/event-dispatcher": "2.7.*"
+        "symfony/event-dispatcher": "2.7.*",
+        "phpunit/phpunit": "~4.8"
     },
     "require": {
         "roave/security-advisories": "dev-master"
