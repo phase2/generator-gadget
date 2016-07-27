@@ -13,7 +13,8 @@
     "drush/drush": "^8",
     "drupal/console": "~0.10",
     "phpmd/phpmd": "~2.1",
-    "drupal/coder": "^8.2"
+    "drupal/coder": "^8.2",
+    "phpunit/phpunit": "~4.8"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
