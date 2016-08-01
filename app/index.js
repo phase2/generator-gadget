@@ -250,6 +250,31 @@ module.exports = yeoman.Base.extend({
         + chalk.red(options.drupalDistroRelease) + '.\n');
       var done = this.async();
       options.drupalDistro.drushMakeFile(this, options, done);
+    },
+    
+    drupalDistroProfile: function () {
+      if (options.drupalDistroCreateProfile) {
+        var distroPath = path.resolve(
+          this.templatePath('drupal'),
+          'profiles',
+          options.drupalDistro.id,
+          options.drupalDistroVersion
+        );
+
+        var profileTplPath = 'profile';
+        var destProfilePath = path.join('src/profiles', options.projectName);
+        var self = this;
+
+        ['.info', '.install', '.profile'].forEach(function (ext) {
+          var profileTplFile = 'profile' + ext;
+          
+          self.fs.copyTpl(
+            self.templatePath(path.join(distroPath, profileTplFile)),
+            self.destinationPath(path.join(destProfilePath, options.projectName + ext)),
+            require('../lib/util').tokens(options)
+          );
+        });
+      }
     }
   },
 
