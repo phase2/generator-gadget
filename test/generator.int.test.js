@@ -22,8 +22,7 @@ describe('gadget:app', function () {
   it('creates files for Drupal 8.x', function() {
     assert.file([
       'README.md',
-      // Distribution-specific makefile.
-      'src/project.make.yml',
+      'composer.json',
       // gtd scaffolding dotfiles are copying.
       'src/modules/.gitkeep',
       // General-purpose behat.yml is not overridden.

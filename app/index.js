@@ -245,11 +245,14 @@ module.exports = yeoman.Base.extend({
     },
 
     drushMakefile: function () {
-      this.log('Setting up Drush makefile to install Drupal Distribution '
-        + options.drupalDistro.option.name + ' version '
-        + chalk.red(options.drupalDistroRelease) + '.\n');
-      var done = this.async();
-      options.drupalDistro.drushMakeFile(this, options, done);
+      // Make files only for 7.x and less.
+      if (options.drupalDistroRelease < 8) {
+        this.log('Setting up Drush makefile to install Drupal Distribution '
+          + options.drupalDistro.option.name + ' version '
+          + chalk.red(options.drupalDistroRelease) + '.\n');
+        var done = this.async();
+        options.drupalDistro.drushMakeFile(this, options, done);
+      }
     }
   },
 
