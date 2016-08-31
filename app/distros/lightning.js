@@ -2,22 +2,22 @@ var request = require('request');
 
 function init() {
   var module = {
-    id: 'openatrium',
-    profile: 'openatrium'
+    id: 'lightning',
+    profile: 'lightning'
   };
 
   module.option = {
-    name: 'Open Atrium',
+    name: 'Lightning',
     value: module.id
   };
 
   module.versions = [
-    {name: 'OpenAtrium 2', value: '7.x'},
+    {name: 'Lightning 1.x', value: '8.x'}
   ];
 
-  module.versionDefault = '7.x';
+  module.versionDefault = '8.x';
 
-  module.description = 'This project is built on [' + module.option.name + '](http://openatrium.com) for more information visit the [Atrium Project Homepage](https://drupal.org/project/openatrium).';
+  module.description = 'This project is built on [' + module.option.name + '](https://www.drupal.org/project/lightning).';
 
   module.releaseVersion = function(majorVersion, done, cb) {
     require('../../lib/drupalProjectVersion').latestRelease(module.id, majorVersion, done, cb);
@@ -27,23 +27,14 @@ function init() {
     var v = options.drupalDistroRelease;
     var releaseVersion = v.slice(v.indexOf('-') + 1);
 
-    var tokens = {
-      drupalDistroName: module.id,
-      drupalDistroRelease: releaseVersion,
-      coreCompatibility: options.drupalDistroVersion,
-      projectName: options.projectName,
-      cache: false,
-      smtp: false
-    };
+    var tokens = options;
+    tokens.coreCompatibility = options.drupalDistroVersion;
+    tokens.drupalDistroRelease = releaseVersion,
+    tokens.cache = false;
 
     if (options['cacheVersion']) {
       tokens.cache = options['cacheInternal'];
       tokens.cacheVersion = options['cacheVersion'];
-    }
-
-    if (options['smtpVersion']) {
-      tokens.smtp = 'smtp';
-      tokens.smtpVersion = options['smtpVersion'];
     }
 
     yo.fs.copyTpl(
@@ -52,11 +43,6 @@ function init() {
       tokens
     );
 
-    yo.fs.copyTpl(
-      yo.templatePath('drupal/' + options.drupalDistro.id + '/project-dev.make.yml'),
-      yo.destinationPath('src/project-dev.make.yml'),
-      tokens
-    );
 
     yo.fs.copyTpl(
       yo.templatePath('drupal/' + options.drupalDistro.id + '/project-specific.make.yml'),
@@ -64,7 +50,7 @@ function init() {
       tokens
     );
 
-    // The Core Makefile is managed by Atrium and varies by release.
+    // The Core Makefile is managed by Lightning and varies by release.
     var url = 'http://cgit.drupalcode.org/' + options.drupalDistro.id
       + '/plain/drupal-org-core.make?id=' + options.drupalDistroRelease;
     request(url,
@@ -75,9 +61,10 @@ function init() {
         done();
       }
     );
-  }
+
+  };
 
   return module;
-};
+}
 
 module.exports = init();

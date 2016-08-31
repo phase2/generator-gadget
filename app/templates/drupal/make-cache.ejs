@@ -1,13 +1,15 @@
   # Provides cache drivers for <%= cache %>. Module installation not required.
   <%= cache %>:
     version: "<%= cacheVersion %>"
-
 <% if (cache == 'redis') { -%>
-## Predis
-# - https://github.com/nrk/predis is a userland Redis client for PHP
-# - PhpRedis (https://github.com/phpredis/phpredis) is a PHP extension with
-#   slightly higher performance and should be used if possible.
 libraries:
+
+  ##
+  # Predis
+  # - https://github.com/nrk/predis is a userland Redis client for PHP
+  # - PhpRedis (https://github.com/phpredis/phpredis) is a PHP extension with
+  #   slightly higher performance and should be used if possible.
+  ##
   predis:
     download:
       type: "get"

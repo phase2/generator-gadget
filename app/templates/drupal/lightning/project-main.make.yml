@@ -2,7 +2,7 @@ api: 2
 core: <%= coreCompatibility %>
 
 ##
-# Build the entire Drupal codebase from an official Atrium release.
+# Build the entire Drupal codebase.
 ##
 
 defaults:
@@ -18,8 +18,8 @@ includes:
   - <%= projectName %>.make.yml
 
 projects:
-  # Base Distribution - [Open Atrium](https://www.drupal.org/project/openatrium)
-  openatrium:
+  # Base Distribution - [Lightning](https://www.drupal.org/project/lightning)
+  lightning:
     type: profile
     version: "<%= drupalDistroRelease %>"
     subdir: ''
