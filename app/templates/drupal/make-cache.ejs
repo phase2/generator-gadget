@@ -3,10 +3,13 @@
     version: "<%= cacheVersion %>"
 
 <% if (cache == 'redis') { -%>
-## Predis
+
+##
+# Predis
 # - https://github.com/nrk/predis is a userland Redis client for PHP
 # - PhpRedis (https://github.com/phpredis/phpredis) is a PHP extension with
 #   slightly higher performance and should be used if possible.
+##
 libraries:
   predis:
     download:

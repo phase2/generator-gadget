@@ -24,7 +24,8 @@ function init() {
   };
 
   module.drushMakeFile = function(yo, options, done) {
-    var releaseVersion = options.drupalDistroRelease.match(/^\d+\.x\-(.+)/)[1];
+    var v = options.drupalDistroRelease;
+    var releaseVersion = v.slice(v.indexOf('-') + 1);
 
     var tokens = {
       drupalDistroName: module.id,
@@ -64,18 +65,19 @@ function init() {
     );
 
     // The Core Makefile is managed by Atrium and varies by release.
-    var filename = 'drupal-org-core.make?id=' + options.drupalDistroRelease;
-    request('http://cgit.drupalcode.org/openatrium/plain/' + filename,
+    var url = 'http://cgit.drupalcode.org/' + options.drupalDistro.id
+      + '/plain/drupal-org-core.make?id=' + options.drupalDistroRelease;
+    request(url,
       function (error, response, body) {
         if (!error && response.statusCode == 200 && body.length) {
           yo.fs.write(yo.destinationPath('src/drupal-org-core.make'), body);
-          done();
         }
+        done();
       }
-    );
-  }
+    )
+  };
 
   return module;
-};
+}
 
 module.exports = init();
