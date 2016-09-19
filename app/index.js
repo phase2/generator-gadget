@@ -193,11 +193,15 @@ module.exports = yeoman.Base.extend({
       var composer = this.fs.readJSON('composer.json');
       composer.name = options.projectName;
       composer.description = options.projectDescription;
+      if (typeof options.drupalDistro.modifyComposer == 'function') {
+        var done = this.async();
+        composer = options.drupalDistro.modifyComposer(this, options, composer, done);
+      }
       this.fs.writeJSON('composer.json', composer);
     },
 
     gruntConfig: function () {
-      var gcfg = this.fs.readJSON('Gruntconfig.json')
+      var gcfg = this.fs.readJSON('Gruntconfig.json');
 
       if (!gcfg) {
         //TODO: throw error
