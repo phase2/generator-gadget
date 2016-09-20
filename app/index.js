@@ -126,6 +126,10 @@ module.exports = yeoman.Base.extend({
     },
 
     gdtBase: function() {
+      // Save the existing composer.json file if any. See composerJson().
+      if (this.fs.exists('composer.json')) {
+        this.fs.copy('composer.json', 'composer.orig');
+      }
       this.fs.copy(
         path.resolve(this.templatePath('gdt'), '**', '*'),
         this.destinationRoot(),
@@ -190,14 +194,31 @@ module.exports = yeoman.Base.extend({
     },
 
     composerJson: function () {
-      var composer = this.fs.readJSON('composer.json');
+      // Import any existing composer.json that was saved above.
+      var composer = {};
+      var composerExists = this.fs.exists('composer.orig');
+      // Project hasn't been generated yet, so start with composer template.
+      // This was copied from the gdt template in gdtBase() above.
+      if (composerExists) {
+        composer = this.fs.readJSON('composer.orig');
+      }
+      else {
+        composer = this.fs.readJSON('composer.json');
+      }
+
       composer.name = options.projectName;
       composer.description = options.projectDescription;
+      // Allow distros to modify the composer.json.
       if (typeof options.drupalDistro.modifyComposer == 'function') {
         var done = this.async();
-        composer = options.drupalDistro.modifyComposer(this, options, composer, done);
+        composer = options.drupalDistro.modifyComposer(this, options, composer, composerExists, done);
       }
       this.fs.writeJSON('composer.json', composer);
+
+      // Clean up original copy.
+      if (composerExists) {
+        this.fs.delete('composer.orig');
+      }
     },
 
     gruntConfig: function () {
