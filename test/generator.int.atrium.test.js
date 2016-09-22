@@ -5,17 +5,17 @@ var os = require('os');
 var path = require('path');
 var test = require('yeoman-test');
 
-describe('gadget:app for Drupal 8', function () {
+describe('gadget:app for Atrium', function () {
   before(function (done) {
     var testDir = path.join(os.tmpdir(), './temp-test');
     test.run(path.join(__dirname, '../app'))
       .inDir(testDir)
       .withOptions({
         'skip-install': true,
-        projectName: 'drupal8',
-        projectDescription: 'test drupal8 project',
-        drupalDistro: 'drupal',
-        drupalDistroVersion: '8.x'
+        projectName: 'oa',
+        projectDescription: 'test atrium project',
+        drupalDistro: 'openatrium',
+        drupalDistroVersion: '7.x'
       })
       .on('end', done);
   });
@@ -29,8 +29,6 @@ describe('gadget:app for Drupal 8', function () {
       'src/modules/.gitkeep',
       // General-purpose behat.yml is not overridden.
       'test/behat.yml',
-      // Behat example tests are present.
-      'test/features/example.feature',
     ]);
   });
 });
