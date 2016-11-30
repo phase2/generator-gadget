@@ -17,9 +17,8 @@ includes:
   ## Project-specific Dependencies
   - <%= projectName %>.make.yml
 
-## Open Atrium
-
 projects:
+  # Base Distribution - [Open Atrium](https://www.drupal.org/project/openatrium)
   openatrium:
     type: profile
     version: "<%= drupalDistroRelease %>"
