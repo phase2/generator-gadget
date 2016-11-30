@@ -246,7 +246,8 @@ module.exports = yeoman.Base.extend({
 
     drushMakefile: function () {
       // Make files only for 7.x and less.
-      if (options.drupalDistroRelease < 8) {
+      var coreVersion = require('../lib/drupalProjectVersion').numericCoreVersion(options.majorVersionForUpdateSystem);
+      if (coreVersion < 8) {
         this.log('Setting up Drush makefile to install Drupal Distribution '
           + options.drupalDistro.option.name + ' version '
           + chalk.red(options.drupalDistroRelease) + '.\n');

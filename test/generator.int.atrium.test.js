@@ -6,6 +6,7 @@ var path = require('path');
 var test = require('yeoman-test');
 
 describe('gadget:app for Atrium', function () {
+
   before(function (done) {
     var testDir = path.join(os.tmpdir(), './temp-test');
     test.run(path.join(__dirname, '../app'))
