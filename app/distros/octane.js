@@ -10,7 +10,7 @@ function init() {
   };
 
   module.option = {
-    name: 'Octane',
+    name: 'Octane/Lightning',
     value: module.id
   };
 
