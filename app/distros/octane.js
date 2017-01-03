@@ -36,41 +36,50 @@ function init() {
     // Then we merge the "require", "require-dev", patches" sections with either
     // the existing project composer.json, or the Drupal base template.
 
-    // Lastest Octane distro code living on drupal.org
-    var url = 'http://cgit.drupalcode.org/' + options.drupalDistro.id
-      + '/plain/composer.json';
-
-    request(url,
-      function (error, response, body) {
-        if (!error && response.statusCode == 200 && body.length) {
-          var remoteComposer = JSON.parse(body);
-          // Read the default Drupal composer.json template.
-          if (isNewProject) {
-            // If no composer.json yet, start with the Drupal template.
-            localComposer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
-
-            // drupal.org composer determines source for drupal modules.
-            localComposer.repositories = remoteComposer.repositories;
-          }
-
-          // Set the project properties.
-          localComposer.name = options.projectName;
-          localComposer.description = options.projectDescription;
-
-          // Merge in requirements from drupal.org composer.
-          localComposer.require = merge.recursive(true, localComposer.require, remoteComposer.require);
-          localComposer.extra['enable-patching'] = remoteComposer.extra['enable-patching'];
-          // Merge in patches from drupal.org composer.
-          localComposer.extra['patches'] = merge.recursive(true, localComposer.extra['patches'], remoteComposer.extra['patches'], true);
-          // Merge in require-dev from drupal.org composer.
-          localComposer['require-dev'] = merge.recursive(true, localComposer['require-dev'], remoteComposer['require-dev']);
-
-          yo.fs.writeJSON('composer.json', localComposer);
-        }
-        done();
+    if (options.offline) {
+      if (isNewProject) {
+        // If no composer.json yet, start with the Drupal template.
+        localComposer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
       }
-    );
-    return localComposer;
+      return localComposer;
+    }
+    else {
+      // Lastest Octane distro code living on drupal.org
+      var url = 'http://cgit.drupalcode.org/' + options.drupalDistro.id
+        + '/plain/composer.json';
+
+      request(url,
+        function (error, response, body) {
+          if (!error && response.statusCode == 200 && body.length) {
+            var remoteComposer = JSON.parse(body);
+            // Read the default Drupal composer.json template.
+            if (isNewProject) {
+              // If no composer.json yet, start with the Drupal template.
+              localComposer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
+
+              // drupal.org composer determines source for drupal modules.
+              localComposer.repositories = remoteComposer.repositories;
+            }
+
+            // Set the project properties.
+            localComposer.name = options.projectName;
+            localComposer.description = options.projectDescription;
+
+            // Merge in requirements from drupal.org composer.
+            localComposer.require = merge.recursive(true, localComposer.require, remoteComposer.require);
+            localComposer.extra['enable-patching'] = remoteComposer.extra['enable-patching'];
+            // Merge in patches from drupal.org composer.
+            localComposer.extra['patches'] = merge.recursive(true, localComposer.extra['patches'], remoteComposer.extra['patches'], true);
+            // Merge in require-dev from drupal.org composer.
+            localComposer['require-dev'] = merge.recursive(true, localComposer['require-dev'], remoteComposer['require-dev']);
+
+            yo.fs.writeJSON('composer.json', localComposer);
+          }
+          done();
+        }
+      );
+      return localComposer;
+    }
   };
 
   return module;
