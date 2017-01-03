@@ -27,6 +27,7 @@
   "dependencies": {
     "chalk": "^1.1.1",
     "lodash": "^4.6.1",
+    "merge": "^1.2.0",
     "request": "^2.67.0",
     "require-directory": "^2.1.1",
     "xml2js": "~0.4.15",

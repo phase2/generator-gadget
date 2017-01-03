@@ -60,6 +60,11 @@
       "from": "lodash@>=4.6.1 <5.0.0",
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.6.1.tgz"
     },
+    "merge": {
+      "version": "1.2.0",
+      "from": "merge@latest",
+      "resolved": "https://registry.npmjs.org/merge/-/merge-1.2.0.tgz"
+    },
     "request": {
       "version": "2.69.0",
       "from": "request@>=2.67.0 <3.0.0",

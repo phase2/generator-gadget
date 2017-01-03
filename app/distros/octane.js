@@ -1,8 +1,11 @@
 var request = require('request');
+var merge = require('merge');
 
 function init() {
   var module = {
     id: 'octane',
+    // Generated project will be based on Lightning, not Octane directly.
+    // Octane only used as template for build files.
     profile: 'lightning'
   };
 
@@ -24,60 +27,45 @@ function init() {
   };
 
   module.drushMakeFile = function(yo, options, done) {
+    // Using all composer.  No Drush make files.
     done();
   };
 
-  // Merge keys from jsonB into jsonA.
-  // Existing values of jsonA are overwritten if they appear in jsonB.
-  // If recurse is true, call recursively for one level of subkeys.
-  function mergeJson(jsonA, jsonB, recurse) {
-    jsonA = (typeof jsonA !== 'undefined') ?  jsonA : {};
-    jsonB = (typeof jsonB !== 'undefined') ?  jsonB : {};
-    recurse = (typeof recurse !== 'undefined') ?  recurse : false;
+  module.modifyComposer = function(yo, options, composer, isNewProject, done) {
+    // We fetch the current composer.json from Drupal.org for the distro.
+    // Then we merge the "require", "require-dev", patches" sections with either
+    // the existing project composer.json, or the Drupal base template.
 
-    var result = {};
-    for (var key in jsonA) {
-      result[key] = jsonA[key];
-    }
-    for (var key in jsonB) {
-      result[key] = jsonB[key];
-      if (recurse && (typeof jsonA[key] == 'object') && (typeof jsonB[key] == 'object')) {
-        // Only one level of recursion.
-        result[key] = mergeJson(jsonA[key], jsonB[key], false);
-      }
-    }
-    return result;
-  }
-
-  module.modifyComposer = function(yo, options, composer, composerExists, done) {
-    // Grab the latest composer.json file for the distro.
+    // Lastest Octane distro code living on drupal.org
     var url = 'http://cgit.drupalcode.org/' + options.drupalDistro.id
       + '/plain/composer.json';
 
     request(url,
       function (error, response, body) {
         if (!error && response.statusCode == 200 && body.length) {
-          yo.fs.write('composer-distro.json', body);
-          var distroComposer = yo.fs.readJSON('composer-distro.json');
+          var distroComposer = JSON.parse(body);
           // Read the default Drupal composer.json template.
-          var drupalComposer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
-          if (!composerExists) {
+          if (isNewProject) {
             // If no composer.json yet, start with the Drupal template.
-            composer = drupalComposer;
+            composer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
+
+            // drupal.org composer determines source for drupal modules.
+            composer.repositories = distroComposer.repositories;
           }
+
+          // Set the project properties.
           composer.name = options.projectName;
           composer.description = options.projectDescription;
-          // drupal.org composer determines source for drupal modules.
-          composer.repositories = distroComposer.repositories;
+
           // Merge in requirements from drupal.org composer.
-          composer.require = mergeJson(composer.require, distroComposer.require);
+          composer.require = merge.recursive(true, composer.require, distroComposer.require);
           composer.extra['enable-patching'] = distroComposer.extra['enable-patching'];
           // Merge in patches from drupal.org composer.
-          composer.extra['patches'] = mergeJson(composer.extra['patches'], distroComposer.extra['patches'], true);
+          composer.extra['patches'] = merge.recursive(true, composer.extra['patches'], distroComposer.extra['patches'], true);
           // Merge in require-dev from drupal.org composer.
-          composer['require-dev'] = mergeJson(composer['require-dev'], distroComposer['require-dev']);
+          composer['require-dev'] = merge.recursive(true, composer['require-dev'], distroComposer['require-dev']);
+
           yo.fs.writeJSON('composer.json', composer);
-          yo.fs.delete('composer-distro.json');
         }
         done();
       }
