@@ -31,7 +31,7 @@ function init() {
     done();
   };
 
-  module.modifyComposer = function(yo, options, composer, isNewProject, done) {
+  module.modifyComposer = function(yo, options, localComposer, isNewProject, done) {
     // We fetch the current composer.json from Drupal.org for the distro.
     // Then we merge the "require", "require-dev", patches" sections with either
     // the existing project composer.json, or the Drupal base template.
@@ -43,34 +43,34 @@ function init() {
     request(url,
       function (error, response, body) {
         if (!error && response.statusCode == 200 && body.length) {
-          var distroComposer = JSON.parse(body);
+          var remoteComposer = JSON.parse(body);
           // Read the default Drupal composer.json template.
           if (isNewProject) {
             // If no composer.json yet, start with the Drupal template.
-            composer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
+            localComposer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
 
             // drupal.org composer determines source for drupal modules.
-            composer.repositories = distroComposer.repositories;
+            localComposer.repositories = remoteComposer.repositories;
           }
 
           // Set the project properties.
-          composer.name = options.projectName;
-          composer.description = options.projectDescription;
+          localComposer.name = options.projectName;
+          localComposer.description = options.projectDescription;
 
           // Merge in requirements from drupal.org composer.
-          composer.require = merge.recursive(true, composer.require, distroComposer.require);
-          composer.extra['enable-patching'] = distroComposer.extra['enable-patching'];
+          localComposer.require = merge.recursive(true, localComposer.require, remoteComposer.require);
+          localComposer.extra['enable-patching'] = remoteComposer.extra['enable-patching'];
           // Merge in patches from drupal.org composer.
-          composer.extra['patches'] = merge.recursive(true, composer.extra['patches'], distroComposer.extra['patches'], true);
+          localComposer.extra['patches'] = merge.recursive(true, localComposer.extra['patches'], remoteComposer.extra['patches'], true);
           // Merge in require-dev from drupal.org composer.
-          composer['require-dev'] = merge.recursive(true, composer['require-dev'], distroComposer['require-dev']);
+          localComposer['require-dev'] = merge.recursive(true, localComposer['require-dev'], remoteComposer['require-dev']);
 
-          yo.fs.writeJSON('composer.json', composer);
+          yo.fs.writeJSON('composer.json', localComposer);
         }
         done();
       }
     );
-    return composer;
+    return localComposer;
   };
 
   return module;
