@@ -14,7 +14,7 @@ default:
     Drupal\DrupalExtension:
       blackbox: ~
       drush:
-        alias: 'local'
+        alias: '<%= projectName %>'
       drupal:
         drupal_root: './build/html'
       api_driver: 'drupal'

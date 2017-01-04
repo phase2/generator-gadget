@@ -135,6 +135,11 @@ module.exports = yeoman.Base.extend({
           globOptions: { dot: true }
         }
       );
+      this.fs.copyTpl(
+        path.resolve(this.templatePath('gdt'), 'test', 'behat.yml'),
+        path.resolve(this.destinationRoot(), 'test', 'behat.yml'),
+        options
+      );
     }
   },
 
