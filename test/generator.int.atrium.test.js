@@ -9,6 +9,7 @@ describe('gadget:app for Atrium', function () {
 
   before(function (done) {
     var testDir = path.join(os.tmpdir(), './temp-test');
+    console.log(testDir);
     test.run(path.join(__dirname, '../app'))
       .inDir(testDir)
       .withOptions({
