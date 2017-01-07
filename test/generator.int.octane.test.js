@@ -33,4 +33,11 @@ describe('gadget:app for Octane', function () {
       'test/behat.yml',
     ]);
   });
+
+  it('has a valid composer.json', function() {
+    assert.jsonFileContent('composer.json', {
+      'name': 'octane'
+    });
+  });
+
 });

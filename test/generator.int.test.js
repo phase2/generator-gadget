@@ -33,4 +33,10 @@ describe('gadget:app for Drupal 8', function () {
       'test/features/example.feature',
     ]);
   });
+
+  it('has a valid composer.json', function() {
+    assert.jsonFileContent('composer.json', {
+      'name': 'drupal8'
+    });
+  });
 });
