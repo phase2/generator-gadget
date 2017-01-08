@@ -5,7 +5,8 @@ var os = require('os');
 var path = require('path');
 var test = require('yeoman-test');
 
-describe('gadget:app for Drupal 8', function () {
+describe('gadget:app for Octane', function () {
+
   before(function (done) {
     var testDir = path.join(os.tmpdir(), './temp-test');
     console.log(testDir);
@@ -13,9 +14,9 @@ describe('gadget:app for Drupal 8', function () {
       .inDir(testDir)
       .withOptions({
         'skip-install': true,
-        projectName: 'drupal8',
-        projectDescription: 'test drupal8 project',
-        drupalDistro: 'drupal',
+        projectName: 'octane',
+        projectDescription: 'test octane project',
+        drupalDistro: 'octane',
         drupalDistroVersion: '8.x'
       })
       .on('end', done);
@@ -24,19 +25,19 @@ describe('gadget:app for Drupal 8', function () {
   it('creates files', function() {
     assert.file([
       'README.md',
+      // Distribution-specific makefile.
       'composer.json',
       // gtd scaffolding dotfiles are copying.
       'src/modules/.gitkeep',
       // General-purpose behat.yml is not overridden.
       'test/behat.yml',
-      // Behat example tests are present.
-      'test/features/example.feature',
     ]);
   });
 
   it('has a valid composer.json', function() {
     assert.jsonFileContent('composer.json', {
-      'name': 'drupal8'
+      'name': 'octane'
     });
   });
+
 });
