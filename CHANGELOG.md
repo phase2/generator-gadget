@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## NEXT [XXXX/XX/XX]
+
+* Drupal 8 projects now use Composer as their sole dependency manager. Drush Make is only used for Drupal 7/Atrium projects.
+* Add a project distribution option for [Octane](https://github.com/phase2/octane).
+    * Added the merge library as a generator dependency so Octane projects receive a composer.json which combines the gadget template with the current Octane stable release manifest.
+* Update Drupal 8 dev dependencies to match Drupal Core. (Note that they are not computed dynamically at generator-time, unlike the distribution version.)
+* Drop support for Node v0.12. Begin support for Node 6 and Node 7.
+* Adjust default behat.yml configuration to work more cleanly out-of-box for CI.
+* Fixed switch deprecated eslint no-comment-dangle configuration option to comment-dangle.
+
 ## v0.5.0 [2016/07/01]
 
 - Added hidden support for SMTP module added to makefile.
