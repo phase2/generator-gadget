@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## NEXT [XXXX/XX/XX]
+## v1.0.0-rc1 [2017/01/12]
 
 * Drupal 8 projects now use Composer as their sole dependency manager. Drush Make is only used for Drupal 7/Atrium projects.
 * Add a project distribution option for [Octane](https://github.com/phase2/octane).
