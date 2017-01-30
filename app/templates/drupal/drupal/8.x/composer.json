@@ -26,7 +26,6 @@
         "drush/drush": "^8",
         "drupal/console": "~0.10",
         "phpmd/phpmd": "~2.1",
-        "phpunit/phpunit": "~4.8",
         "drupal/coder": "^8.2"
     },
     "conflict": {
