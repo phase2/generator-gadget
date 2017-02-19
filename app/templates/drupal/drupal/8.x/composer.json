@@ -24,7 +24,7 @@
         "mikey179/vfsStream": "~1.2",
         "phpunit/phpunit": "~4.8",
         "drush/drush": "^8",
-        "drupal/console": "1.0.0-rc15",
+        "drupal/console": "1.0.0-rc16",
         "phpmd/phpmd": "~2.1",
         "drupal/coder": "^8.2"
     },
