@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.0.0 [2017/02/18]
+
+* Generated composer.json updates
+    * Drupal Console from v0.11 to v1.0.0-rc16
+    * Remove duplicate phpunit entry
+
 ## v1.0.0-rc1 [2017/01/12]
 
 * Drupal 8 projects now use Composer as their sole dependency manager. Drush Make is only used for Drupal 7/Atrium projects.
