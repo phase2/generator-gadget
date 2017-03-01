@@ -1,6 +1,6 @@
 'use strict';
 
-var yeoman = require('yeoman-generator');
+var Generator = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var path = require('path');
@@ -10,9 +10,9 @@ var gadget = require('../lib/util');
 
 var options = {};
 
-module.exports = yeoman.Base.extend({
+module.exports = Generator.extend({
   initializing: function () {
-    this.pkg = require('../package.json');
+    this.pkg = require('../../package.json');
 
     if (!this.options.skipWelcome) {
       this.log(yosay(
@@ -24,15 +24,14 @@ module.exports = yeoman.Base.extend({
 
   prompting: function () {
     var self = this;
-    var done = this.async();
 
     if (this.options.hasOwnProperty('drupalDistro') && typeof this.options.drupalDistro === 'string') {
-      var distros = require('../app/distros');
+      var distros = require('../lib/distros');
       this.options.drupalDistro = distros[this.options.drupalDistro];
     }
 
     if (this.options.hasOwnProperty('drupal-distro') && typeof this.options['drupal-distro'] === 'string') {
-      var distros = require('../app/distros');
+      var distros = require('../lib/distros');
       this.options['drupalDistro'] = distros[this.options['drupal-distro']];
     }
 
@@ -41,13 +40,12 @@ module.exports = yeoman.Base.extend({
       return _.isUndefined(self.options[item.name]);
     });
 
-    this.prompt(prompts, function (props) {
+    return this.prompt(prompts).then(function (props) {
       options = _.assign(props, this.options);
       if (!options['cacheInternal']) {
         options.cacheInternal = 'database';
       }
       this.log("\nOk, I'm going to start assembling this project...");
-      done();
     }.bind(this));
   },
 
