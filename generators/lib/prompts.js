@@ -6,7 +6,8 @@
 var chalk = require('chalk');
 var _ = require('lodash');
 
-var distros = require('../app/distros');
+var distros = require('./distros');
+
 var prompts = [
   {
     type: 'input',

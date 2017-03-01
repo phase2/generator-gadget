@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var assert = require('yeoman-assert');
-var distros = require('../app/distros');
+var distros = require('../generators/lib/distros');
 
 describe('Distribution Plugins', function() {
   for(var id in distros) {
