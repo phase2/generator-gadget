@@ -201,6 +201,11 @@ module.exports = Generator.extend({
       if (isNewProject) {
         // Project hasn't been generated yet, so start with composer template.
         composer = this.fs.readJSON('composer.json');
+
+        // Overwrite new project composer.json with a new core version.
+        if (composer.require['drupal/core'] && options.drupalDistroRelease) {
+          composer.require['drupal/core'] = require('../lib/drupalProjectVersion').toMinorRange(options.drupalDistroRelease);
+        }
       }
       else {
         // Use original composer file if project already generated.
@@ -214,6 +219,7 @@ module.exports = Generator.extend({
         var done = this.async();
         composer = options.drupalDistro.modifyComposer(this, options, composer, isNewProject, done);
       }
+
       this.fs.writeJSON('composer.json', composer);
     },
 
