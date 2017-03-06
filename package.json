@@ -1,7 +1,7 @@
 {
   "name": "generator-gadget",
   "description": "The Yeoman Generator for Drupal and Grunt Drupal Tasks.",
-  "version": "1.0.0",
+  "version": "1.0.1-pre",
   "main": "generators/app/index.js",
   "license": "MIT",
   "repository": {
