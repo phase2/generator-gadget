@@ -52,22 +52,13 @@ module.exports = Generator.extend({
   configuring: {
     // Determine the latest stable release for the requested Drupal core version.
     getDistroRelease: function () {
-      // Provide a fallback value in case the request fails.
-      options.drupalDistroRelease = options.drupalDistroVersion;
-
-      // Handle version used by updates.drupal.org for 8.x.x releases.
-      options.majorVersionForUpdateSystem = options.drupalDistroVersion;
-      if (options.majorVersionForUpdateSystem.match(/^8\.\d+\.x$/)) {
-        options.majorVersionForUpdateSystem = '8.x';
-      }
-
       if (options['offline']) {
         options.drupalDistroRelease = 0;
       }
       else {
         // Find the latest stable release for the Drupal distro version.
         var done = this.async();
-        options.drupalDistro.releaseVersion(options.majorVersionForUpdateSystem, done, function(err, version, done) {
+        options.drupalDistro.releaseVersion(options.drupalDistroVersion, done, function(err, version, done) {
           if (err) {
             this.log.error(err);
             return done(err);
@@ -88,7 +79,7 @@ module.exports = Generator.extend({
           require('../lib/drupalProjectVersion')
             // the other options for cache are redis and memcache, which happen
             // to be the names of the contrib modules that integrate with them.
-            .latestRelease(options.cacheInternal, options.majorVersionForUpdateSystem, done, function(err, version, done) {
+            .latestRelease(options.cacheInternal, options.drupalDistroVersion, done, function(err, version, done) {
               if (err) {
                 this.log.error(err);
                 return done(err);
@@ -109,7 +100,7 @@ module.exports = Generator.extend({
         else {
           var done = this.async();
           require('../lib/drupalProjectVersion')
-            .latestRelease('smtp', options.majorVersionForUpdateSystem, done, function(err, version, done) {
+            .latestRelease('smtp', options.drupalDistroVersion, done, function(err, version, done) {
               if (err) {
                 this.log.error(err);
                 return done(err);
@@ -275,7 +266,7 @@ module.exports = Generator.extend({
 
     drushMakefile: function () {
       // Make files only for 7.x and less.
-      var coreVersion = require('../lib/drupalProjectVersion').numericCoreVersion(options.majorVersionForUpdateSystem);
+      var coreVersion = require('../lib/drupalProjectVersion').numericCoreVersion(options.drupalDistroVersion);
       if (coreVersion < 8) {
         this.log('Setting up Drush makefile to install Drupal Distribution '
           + options.drupalDistro.option.name + ' version '
