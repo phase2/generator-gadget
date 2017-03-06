@@ -52,22 +52,13 @@ module.exports = Generator.extend({
   configuring: {
     // Determine the latest stable release for the requested Drupal core version.
     getDistroRelease: function () {
-      // Provide a fallback value in case the request fails.
-      options.drupalDistroRelease = options.drupalDistroVersion;
-
-      // Handle version used by updates.drupal.org for 8.x.x releases.
-      options.majorVersionForUpdateSystem = options.drupalDistroVersion;
-      if (options.majorVersionForUpdateSystem.match(/^8\.\d+\.x$/)) {
-        options.majorVersionForUpdateSystem = '8.x';
-      }
-
       if (options['offline']) {
         options.drupalDistroRelease = 0;
       }
       else {
         // Find the latest stable release for the Drupal distro version.
         var done = this.async();
-        options.drupalDistro.releaseVersion(options.majorVersionForUpdateSystem, done, function(err, version, done) {
+        options.drupalDistro.releaseVersion(options.drupalDistroVersion, done, function(err, version, done) {
           if (err) {
             this.log.error(err);
             return done(err);
@@ -88,7 +79,7 @@ module.exports = Generator.extend({
           require('../lib/drupalProjectVersion')
             // the other options for cache are redis and memcache, which happen
             // to be the names of the contrib modules that integrate with them.
-            .latestRelease(options.cacheInternal, options.majorVersionForUpdateSystem, done, function(err, version, done) {
+            .latestRelease(options.cacheInternal, options.drupalDistroVersion, done, function(err, version, done) {
               if (err) {
                 this.log.error(err);
                 return done(err);
@@ -109,7 +100,7 @@ module.exports = Generator.extend({
         else {
           var done = this.async();
           require('../lib/drupalProjectVersion')
-            .latestRelease('smtp', options.majorVersionForUpdateSystem, done, function(err, version, done) {
+            .latestRelease('smtp', options.drupalDistroVersion, done, function(err, version, done) {
               if (err) {
                 this.log.error(err);
                 return done(err);
@@ -138,10 +129,12 @@ module.exports = Generator.extend({
         path.resolve(this.destinationRoot(), 'test', 'behat.yml'),
         options
       );
-    }
-  },
+    },
 
-  writing: {
+    // This has been moved up from writing because the details of some of these
+    // files may need to be loaded as part of configuring other write operations,
+    // and the parallelization model for generator composition requires
+    // dependencies to be handled in an earlier priority context.
     distroAdditions: function () {
       var srcFiles = path.resolve(
         this.templatePath('drupal'),
@@ -159,6 +152,35 @@ module.exports = Generator.extend({
         );
       }
     },
+
+    // While there are write operations in this, other write operations may need
+    // to examine the composer.json to determine their own configuration.
+    composerJson: function () {
+      // Import any existing composer.json that was saved above.
+      var composer = {};
+      var isNewProject = (this.composerOrig == undefined);
+      if (isNewProject) {
+        // Project hasn't been generated yet, so start with composer template.
+        composer = this.fs.readJSON('composer.json');
+      }
+      else {
+        // Use original composer file if project already generated.
+        composer = this.composerOrig;
+      }
+
+      composer.name = options.projectName;
+      composer.description = options.projectDescription;
+      // Allow distros to modify the composer.json.
+      if (typeof options.drupalDistro.modifyComposer == 'function') {
+        var done = this.async();
+        composer = options.drupalDistro.modifyComposer(this, options, composer, isNewProject, done);
+      }
+      this.fs.writeJSON('composer.json', composer);
+    }
+  },
+
+  writing: {
+
 
     projectResources: function () {
       this.fs.copy(
@@ -192,35 +214,6 @@ module.exports = Generator.extend({
       }
 
       this.fs.writeJSON('package.json', pkg);
-    },
-
-    composerJson: function () {
-      // Import any existing composer.json that was saved above.
-      var composer = {};
-      var isNewProject = (this.composerOrig == undefined);
-      if (isNewProject) {
-        // Project hasn't been generated yet, so start with composer template.
-        composer = this.fs.readJSON('composer.json');
-
-        // Overwrite new project composer.json with a new core version.
-        if (composer.require['drupal/core'] && options.drupalDistroRelease) {
-          composer.require['drupal/core'] = require('../lib/drupalProjectVersion').toMinorRange(options.drupalDistroRelease);
-        }
-      }
-      else {
-        // Use original composer file if project already generated.
-        composer = this.composerOrig;
-      }
-
-      composer.name = options.projectName;
-      composer.description = options.projectDescription;
-      // Allow distros to modify the composer.json.
-      if (typeof options.drupalDistro.modifyComposer == 'function') {
-        var done = this.async();
-        composer = options.drupalDistro.modifyComposer(this, options, composer, isNewProject, done);
-      }
-
-      this.fs.writeJSON('composer.json', composer);
     },
 
     gruntConfig: function () {
@@ -273,7 +266,7 @@ module.exports = Generator.extend({
 
     drushMakefile: function () {
       // Make files only for 7.x and less.
-      var coreVersion = require('../lib/drupalProjectVersion').numericCoreVersion(options.majorVersionForUpdateSystem);
+      var coreVersion = require('../lib/drupalProjectVersion').numericCoreVersion(options.drupalDistroVersion);
       if (coreVersion < 8) {
         this.log('Setting up Drush makefile to install Drupal Distribution '
           + options.drupalDistro.option.name + ' version '

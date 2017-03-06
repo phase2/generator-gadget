@@ -68,4 +68,20 @@ describe('Drupal.org API Client', function() {
     });
   });
 
+  describe('toDrupalMajorVersion', function() {
+    it ('should leave a properly formatted version alone.', function() {
+      assert.equal('8.x', drupal.toDrupalMajorVersion('8.x'), 'A major version such as 8.x should be left alone.');
+    });
+    it ('should convert a semantic version to a Drupal major version.', function() {
+      assert.equal('8.x', drupal.toDrupalMajorVersion('8.2.6'), '8.2.6 should be converted to 8.x');
+    });
+    it ('should ignore the presence of a pre-release suffix.', function() {
+      assert.equal('8.x', drupal.toDrupalMajorVersion('8.3.0-beta2'), '8.3.0-beta2 should be converted to 8.x');
+    });
+    it ('should convert a semver patch level range to Drupal major version..', function() {
+      assert.equal('8.x', drupal.toDrupalMajorVersion('8.2.x'), '8.2.x should be converted to 8.x');
+    });
+  });
+
+
 });

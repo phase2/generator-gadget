@@ -23,6 +23,10 @@ function init() {
   var cache = {};
 
   function loadReleaseData(project, majorVersion, done, cb) {
+    // Just in case we have a semver string instead of the expected Drupal
+    // update system style major version "8.x", perform a cleanup.
+    majorVersion = toDrupalMajorVersion(majorVersion);
+
     var cid = project + majorVersion;
     if (cache[cid]) {
       return cb(null, cache[cid], done);
@@ -104,6 +108,22 @@ function init() {
   }
 
   /**
+   * The Drupal update system uses a pre-semver approach of version numbering.
+   *
+   * Major versions must be in the form of "8.x", as opposed to other semver
+   * ranges or version numbers.
+   */
+  function toDrupalMajorVersion(version) {
+    var regex = /^(\d+)\.\d+\.[x\d+]/;
+    var match = version.match(regex)
+    if (match) {
+      return match[1] + '.x';
+    }
+
+    return version;
+  }
+
+  /**
    * Determine if we have successfully cached the release data.
    */
   function isCached(project, majorVersion) {
@@ -115,6 +135,7 @@ function init() {
   module.latestReleaseStable = latestReleaseStable;
   module.numericCoreVersion = numericCoreVersion;
   module.toMinorRange = toMinorRange;
+  module.toDrupalMajorVersion = toDrupalMajorVersion;
   // This function facilitates testing & troubleshooting.
   module.isCached = isCached;
 
