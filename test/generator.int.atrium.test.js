@@ -5,10 +5,10 @@ var os = require('os');
 var path = require('path');
 var test = require('yeoman-test');
 
-describe('gadget:app for Atrium', function () {
+describe('gadget:app for Atrium', function() {
 
   before(function (done) {
-    var testDir = path.join(os.tmpdir(), './temp-test');
+    var testDir = path.join(os.tmpdir(), './temp-test-atrium');
     console.log(testDir);
     test.run(path.join(__dirname, '../generators/app'))
       .inDir(testDir)

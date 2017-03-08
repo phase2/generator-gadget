@@ -1,3 +1,5 @@
+var gadget = require('../util');
+
 function init() {
   var module = {
     id: 'drupal',
@@ -19,8 +21,16 @@ function init() {
   module.description = 'This project is built directly on Drupal Core, it is not leveraging other distributions. For more information visit the [Drupal Project homepage](http://drupal.org/project/drupal).';
 
   module.releaseVersion = function(majorVersion, done, cb) {
-    require('../../lib/drupalProjectVersion').latestReleaseStable(module.id, majorVersion, done, cb);
+    require('../drupalProjectVersion').latestReleaseStable(module.id, majorVersion, done, cb);
   };
+
+  module.loadComposer = function(yo, options) {
+    var file = yo.templatePath('drupal/' + module.id + '/' + options.drupalDistroVersion + '/composer.json');
+    if (gadget.fsExistsSync(file)) {
+      return yo.fs.readJSON(file);
+    }
+    return yo.fs.readJSON(yo.templatePath('gdt/composer.json'));
+  }
 
   module.drushMakeFile = function(yo, options, done) {
     var tokens = {

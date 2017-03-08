@@ -66,6 +66,9 @@ describe('Drupal.org API Client', function() {
     it ('should convert a version number to a minor range', function() {
       assert.equal('^8.2', drupal.toMinorRange('8.2.6'), '8.2.6 becomes ^8.2');
     });
+    it ('should return Major.X as a viable minor range.', function() {
+      assert.equal('8.x', drupal.toMinorRange('8.x'), '8.x becomes 8.x');
+    });
   });
 
   describe('toDrupalMajorVersion', function() {

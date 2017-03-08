@@ -102,9 +102,20 @@ function init() {
 
   // Convert a semver version from '8.2.6' to a minor range '^8.2'.
   function toMinorRange(version) {
-    var regex = /^(\d+\.\d+)\.\d+/;
+    var regex = /^\d+\.\d+/;
     var range = version.match(regex);
-    return '^' + range[1];
+    if (range) {
+      return '^' + range[0];
+    }
+    else {
+      var regex = /^\d+\.x/;
+      var range = version.match(regex);
+      if (range) {
+        return range[0];
+      }
+    }
+
+    return version;
   }
 
   /**

@@ -1,5 +1,6 @@
 var request = require('request');
 var merge = require('merge');
+var gadget = require('../util');
 
 function init() {
   var module = {
@@ -31,21 +32,29 @@ function init() {
     done();
   };
 
-  module.modifyComposer = function(yo, options, localComposer, isNewProject, done) {
+  module.loadComposer = function(yo, options) {
+    var composer = {};
+    var file = yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json');
+    if (gadget.fsExistsSync(file)) {
+      composer = yo.fs.readJSON(file);
+      // Octane gets it's version of Drupal Core from Lightning.
+      // To minimize conflicts with the rest of the generator process, we defer
+      // removing this until the last time Octane can reasonably impose this logic.
+      delete composer.require['drupal/core'];
+    }
+    return composer;
+  }
+
+  module.modifyComposer = function(yo, options, localComposer, isNewProject, done, cb) {
     // We fetch the current composer.json from Drupal.org for the distro.
     // Then we merge the "require", "require-dev", patches" sections with either
     // the existing project composer.json, or the Drupal base template.
-
     if (options.offline) {
-      if (isNewProject) {
-        // If no composer.json yet, start with the Drupal template.
-        localComposer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
-      }
-      return localComposer;
+      cb(null, localComposer, done);
     }
     else {
       // Lastest Octane distro code living on drupal.org
-      var url = 'http://cgit.drupalcode.org/' + options.drupalDistro.id
+      var url = 'http://cgit.drupalcode.org/' + module.id
         + '/plain/composer.json';
 
       request(url,
@@ -54,16 +63,12 @@ function init() {
             var remoteComposer = JSON.parse(body);
             // Read the default Drupal composer.json template.
             if (isNewProject) {
-              // If no composer.json yet, start with the Drupal template.
-              localComposer = yo.fs.readJSON(yo.templatePath('drupal/drupal/' + options.drupalDistroRelease + '/composer.json'));
-
               // drupal.org composer determines source for drupal modules.
+              // @todo if the remoteComposer starts having changes to composer
+              // repositories this will need to be changed to update existing
+              // composer.json.
               localComposer.repositories = remoteComposer.repositories;
             }
-
-            // Set the project properties.
-            localComposer.name = options.projectName;
-            localComposer.description = options.projectDescription;
 
             // Merge in requirements from drupal.org composer.
             localComposer.require = merge.recursive(true, localComposer.require, remoteComposer.require);
@@ -73,12 +78,15 @@ function init() {
             // Merge in require-dev from drupal.org composer.
             localComposer['require-dev'] = merge.recursive(true, localComposer['require-dev'], remoteComposer['require-dev']);
 
-            yo.fs.writeJSON('composer.json', localComposer);
+            cb(null, localComposer, done);
+          }
+          else if (error) {
+            yo.log.error("Could not retrieve Octane's composer.json.");
+            cb(error, null, done);
           }
           done();
         }
       );
-      return localComposer;
     }
   };
 
