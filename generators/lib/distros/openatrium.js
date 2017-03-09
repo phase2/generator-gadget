@@ -1,5 +1,6 @@
 var request = require('request');
 var gadget = require('../util');
+var drupalOrgApi = require('../drupalProjectVersion');
 
 function init() {
   var module = {
@@ -21,7 +22,7 @@ function init() {
   module.description = 'This project is built on [' + module.option.name + '](http://openatrium.com) for more information visit the [Atrium Project Homepage](https://drupal.org/project/openatrium).';
 
   module.releaseVersion = function(majorVersion, done, cb) {
-    require('../drupalProjectVersion').latestReleaseStable(module.id, majorVersion, done, cb);
+    drupalOrgApi.latestReleaseStable(module.id, majorVersion, done, cb);
   };
 
   module.loadComposer = function(yo, options) {

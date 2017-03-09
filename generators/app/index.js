@@ -7,6 +7,7 @@ var path = require('path');
 var _ = require('lodash');
 
 var gadget = require('../lib/util');
+var drupalOrgApi = require('../lib/drupalProjectVersion');
 
 var options = {};
 
@@ -80,10 +81,10 @@ module.exports = Generator.extend({
         }
         else {
           var done = this.async();
-          require('../lib/drupalProjectVersion')
-            // the other options for cache are redis and memcache, which happen
-            // to be the names of the contrib modules that integrate with them.
-            .latestRelease(options.cacheInternal, options.drupalDistroVersion, done, function(err, version, done) {
+          // the other options for cache are redis and memcache, which happen
+          // to be the names of the contrib modules that integrate with them.
+          drupalOrgApi.latestRelease(options.cacheInternal, options.drupalDistroVersion, done,
+            function(err, version, done) {
               if (err) {
                 this.log.error(err);
                 return done(err);
@@ -103,8 +104,8 @@ module.exports = Generator.extend({
         }
         else {
           var done = this.async();
-          require('../lib/drupalProjectVersion')
-            .latestRelease('smtp', options.drupalDistroVersion, done, function(err, version, done) {
+          drupalOrgApi.latestRelease('smtp', options.drupalDistroVersion, done,
+            function(err, version, done) {
               if (err) {
                 this.log.error(err);
                 return done(err);
@@ -189,7 +190,7 @@ module.exports = Generator.extend({
         // drupal/core is set, it is a real version or range and we have a
         // release version to derive something better.
         if (this.composer.require['drupal/core'] && !_.isString(this.composer.require['drupal/core']) && options.drupalDistroRelease) {
-          this.composer.require['drupal/core'] = require('../lib/drupalProjectVersion').toMinorRange(options.drupalDistroRelease);
+          this.composer.require['drupal/core'] = drupalOrgApi.toMinorRange(options.drupalDistroRelease);
         }
       }
 
@@ -282,7 +283,7 @@ module.exports = Generator.extend({
 
     drushMakefile: function () {
       // Make files only for 7.x and less.
-      var coreVersion = require('../lib/drupalProjectVersion').numericCoreVersion(options.drupalDistroVersion);
+      var coreVersion = drupalOrgApi.numericCoreVersion(options.drupalDistroVersion);
       if (coreVersion < 8) {
         this.log('Setting up Drush makefile to install Drupal Distribution '
           + options.drupalDistro.option.name + ' version '

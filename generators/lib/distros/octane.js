@@ -38,8 +38,9 @@ function init() {
     if (gadget.fsExistsSync(file)) {
       composer = yo.fs.readJSON(file);
       // Octane gets it's version of Drupal Core from Lightning.
-      // To minimize conflicts with the rest of the generator process, we defer
-      // removing this until the last time Octane can reasonably impose this logic.
+      // The composer.json template is pulled from the Drupal distro, which does
+      // use a drupal/core version. To ensure some core processing logic does
+      // not execute for Octane we remove this entry as the one key difference.
       delete composer.require['drupal/core'];
     }
     return composer;

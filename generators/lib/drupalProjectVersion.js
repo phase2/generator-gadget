@@ -100,7 +100,16 @@ function init() {
     return version.slice(0, version.indexOf('.'));
   }
 
-  // Convert a semver version from '8.2.6' to a minor range '^8.2'.
+  /**
+   * Convert a semantic version to a minor range.
+   *
+   * In composer.json entries for Drupal core or other major projects, we often
+   * want to designate the version similar to '^8.2'. This code converts version
+   * strings that may have a pre-release suffix to such a range.
+   *
+   * Furthermore, there are some edge cases wherein we may want to take a version
+   * that is already a minor range, such as 8.x, and use it as is.
+   */
   function toMinorRange(version) {
     var regex = /^\d+\.\d+/;
     var range = version.match(regex);
