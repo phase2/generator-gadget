@@ -1,4 +1,6 @@
 var request = require('request');
+var gadget = require('../util');
+var drupalOrgApi = require('../drupalProjectVersion');
 
 function init() {
   var module = {
@@ -20,8 +22,16 @@ function init() {
   module.description = 'This project is built on [' + module.option.name + '](http://openatrium.com) for more information visit the [Atrium Project Homepage](https://drupal.org/project/openatrium).';
 
   module.releaseVersion = function(majorVersion, done, cb) {
-    require('../../lib/drupalProjectVersion').latestReleaseStable(module.id, majorVersion, done, cb);
+    drupalOrgApi.latestReleaseStable(module.id, majorVersion, done, cb);
   };
+
+  module.loadComposer = function(yo, options) {
+    var file = yo.templatePath('drupal/' + module.id + '/' + options.drupalDistroVersion + '/composer.json');
+    if (gadget.fsExistsSync(file)) {
+      return yo.fs.readJSON(file);
+    }
+    return yo.fs.readJSON(yo.templatePath('gdt/composer.json'));
+  }
 
   module.drushMakeFile = function(yo, options, done) {
     var v = options.drupalDistroRelease;

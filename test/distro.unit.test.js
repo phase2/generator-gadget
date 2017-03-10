@@ -22,6 +22,7 @@ function testPluginConformance(id, distro) {
       assert(distro.versionDefault);
       assert(distro.releaseVersion);
       assert(distro.drushMakeFile);
+      assert(distro.loadComposer);
       done();
     });
 

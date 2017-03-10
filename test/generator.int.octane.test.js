@@ -1,14 +1,16 @@
 'use strict';
 
 var assert = require('yeoman-assert');
+var fs = require('fs');
 var os = require('os');
 var path = require('path');
 var test = require('yeoman-test');
+var _ = require('lodash');
 
-describe('gadget:app for Octane', function () {
+describe('gadget:app for Octane', function() {
 
   before(function (done) {
-    var testDir = path.join(os.tmpdir(), './temp-test');
+    var testDir = path.join(os.tmpdir(), './temp-test-octane');
     console.log(testDir);
     test.run(path.join(__dirname, '../generators/app'))
       .inDir(testDir)
@@ -34,9 +36,16 @@ describe('gadget:app for Octane', function () {
     ]);
   });
 
-  it('has a valid composer.json', function() {
-    assert.jsonFileContent('composer.json', {
-      'name': 'octane'
+  describe('composer.json', function() {
+    it('has a valid composer.json', function() {
+      assert.jsonFileContent('composer.json', {
+        'name': 'octane',
+      });
+    });
+
+    it('does not specify a core version', function() {
+      var json = JSON.parse(fs.readFileSync('composer.json', 'utf8'));
+      assert.ok(!json.require['drupal/core']);
     });
   });
 
