@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var spawn = require('yeoman-generator/lib/actions/spawn_command');
+var spawn = require('yeoman-generator/lib/actions/spawn-command');
 
 module.exports.labelMaker = function(str) {
   return _.words(str).map(function(word) {
