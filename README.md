@@ -1,12 +1,11 @@
 # Gadget: A Generator for New Drupal Projects
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/phase2/generator-gadget.svg)](https://greenkeeper.io/)
-
 > [Yeoman](http://yeoman.io) generator to scaffold a [Drupal](https://www.drupal.org) project for use with [grunt-drupal-tasks](https://github.com/phase2/grunt-drupal-tasks).
 
 [![Travis CI status](https://travis-ci.org/phase2/generator-gadget.png?branch=master)](https://travis-ci.org/phase2/generator-gadget)
-[![Dependency Status](https://david-dm.org/phase2/generator-gadget.svg)](https://david-dm.org/phase2/generator-gadget)
 [![npm version](https://badge.fury.io/js/generator-gadget.svg)](https://www.npmjs.com/package/generator-gadget)
+[![Dependency Status](https://david-dm.org/phase2/generator-gadget.svg)](https://david-dm.org/phase2/generator-gadget)
+[![Greenkeeper badge](https://badges.greenkeeper.io/phase2/generator-gadget.svg)](https://greenkeeper.io/)
 
 ## Features
 
