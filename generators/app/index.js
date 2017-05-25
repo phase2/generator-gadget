@@ -169,7 +169,7 @@ module.exports = Generator.extend({
         this.composer = this.composerOrig;
       }
 
-      this.composer.name = options.projectName;
+      this.composer.name = 'organization/' + options.projectName;
       this.composer.description = options.projectDescription;
       // Allow distros to modify the composer.json.
       if (typeof options.drupalDistro.modifyComposer == 'function') {
@@ -185,19 +185,6 @@ module.exports = Generator.extend({
           done();
         }.bind(this));
       }
-
-      // Overwrite new project composer.json with a new core version.
-      // This needs to go down here to give distros a chance to preemptively
-      // modify the version of drupal/core.
-      if (isNewProject) {
-        // drupal/core is set, it is a real version or range and we have a
-        // release version to derive something better.
-        if (this.composer.require['drupal/core'] && !_.isString(this.composer.require['drupal/core']) && options.drupalDistroRelease) {
-          this.composer.require['drupal/core'] = drupalOrgApi.toMinorRange(options.drupalDistroRelease);
-        }
-      }
-
-      this.fs.writeJSON('composer.json', this.composer);
     }
   },
 
