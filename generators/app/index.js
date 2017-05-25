@@ -162,7 +162,7 @@ module.exports = Generator.extend({
 
     // While there are write operations in this, other write operations may need
     // to examine the composer.json to determine their own configuration.
-    composerJson: function () {
+    prepareComposerJson: function () {
       var isNewProject = (this.composerOrig == undefined);
       if (!isNewProject) {
         // Use original composer file if project already generated.
@@ -174,13 +174,16 @@ module.exports = Generator.extend({
       // Allow distros to modify the composer.json.
       if (typeof options.drupalDistro.modifyComposer == 'function') {
         var done = this.async();
-        var self = this;
-        options.drupalDistro.modifyComposer(self, options, this.composer, isNewProject, done, function(err, result, done) {
+        options.drupalDistro.modifyComposer(options, this.composer, isNewProject, done, function(err, result, done) {
           if (!err && result) {
             this.composer = result;
           }
+          else {
+            this.log.warning("Could not retrieve Octane's composer.json: "  + err);
+            return done(err);
+          }
           done();
-        }.bind(self));
+        }.bind(this));
       }
 
       // Overwrite new project composer.json with a new core version.
@@ -279,6 +282,10 @@ module.exports = Generator.extend({
           gadget.tokens(options)
         );
       }
+    },
+
+    composerJson: function() {
+      this.fs.writeJSON('composer.json', this.composer);
     },
 
     drushMakefile: function () {
