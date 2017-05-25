@@ -54,7 +54,22 @@ yo gadget
 * `--skipWelcome`: Skip opening welcome message.
 * `--skipGoodbye`: Skip closing messages.
 
+
 ## Additional Resources
 
 * For information on using Grunt Drupal Tasks after installing with Gadget, see the [Grunt Drupal Tasks documentation](https://phase2.github.io/grunt-drupal-tasks).
 * Interested in the Frontend? Check out our sibling project, [Generator Patter Lab Starter](https://github.com/phase2/generator-pattern-lab-starter) to get a theme ready to go with options for Pattern Lab, icon fonts, SASS, visual regression testing, and more.
+
+## Docker-based Development
+
+Install the dependencies:
+
+```
+docker-compose run --rm cli npm install
+```
+
+Then run the generator:
+
+```
+docker-compose run --rm yo gadget
+```

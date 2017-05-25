@@ -1,0 +1,17 @@
+version: '2.1'
+
+services:
+
+  cli:
+    extends:
+      service: yo
+    working_dir: /usr/local/lib/node_modules/generator-gadget
+    entrypoint: ["/usr/bin/env"]
+    command: "bash"
+
+  yo:
+    image: outrigger/yeoman
+    network_mode: "bridge"
+    volumes:
+      - ${YO_PROJECT_DIRECTORY:-~/Projects/newproject}:/generated
+      - .:/usr/local/lib/node_modules/generator-gadget
