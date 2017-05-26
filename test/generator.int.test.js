@@ -40,7 +40,7 @@ describe('gadget:app for Drupal 8', function () {
     describe('composer.json', function() {
       it('has a valid composer.json', function() {
         assert.jsonFileContent('composer.json', {
-          'name': 'drupal8',
+          'name': 'organization/drupal8',
         });
       });
 
@@ -84,7 +84,7 @@ describe('gadget:app for Drupal 8', function () {
     describe('composer.json', function() {
       it('has a valid composer.json', function() {
         assert.jsonFileContent('composer.json', {
-          'name': 'drupal8',
+          'name': 'organization/drupal8',
         });
       });
 
