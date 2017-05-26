@@ -46,7 +46,7 @@ describe('gadget:app for Drupal 8', function () {
 
       it('specifies a real drupal/core version', function() {
         var json = JSON.parse(fs.readFileSync('composer.json', 'utf8'));
-        assert.ok(json.require['drupal/core'] && _.isString(json.require['drupal/core']));
+        assert.ok(json.require['drupal/core']));
       });
     });
   });
@@ -90,7 +90,7 @@ describe('gadget:app for Drupal 8', function () {
 
       it('specifies a real drupal/core version', function() {
         var json = JSON.parse(fs.readFileSync('composer.json', 'utf8'));
-        assert.ok(json.require['drupal/core'] && _.isString(json.require['drupal/core']));
+        assert.ok(json.require['drupal/core']));
       });
     });
 
