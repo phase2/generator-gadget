@@ -40,13 +40,13 @@ describe('gadget:app for Drupal 8', function () {
     describe('composer.json', function() {
       it('has a valid composer.json', function() {
         assert.jsonFileContent('composer.json', {
-          'name': 'drupal8',
+          'name': 'organization/drupal8',
         });
       });
 
       it('specifies a real drupal/core version', function() {
         var json = JSON.parse(fs.readFileSync('composer.json', 'utf8'));
-        assert.ok(json.require['drupal/core'] && _.isString(json.require['drupal/core']));
+        assert.ok(json.require['drupal/core']);
       });
     });
   });
@@ -84,13 +84,13 @@ describe('gadget:app for Drupal 8', function () {
     describe('composer.json', function() {
       it('has a valid composer.json', function() {
         assert.jsonFileContent('composer.json', {
-          'name': 'drupal8',
+          'name': 'organization/drupal8',
         });
       });
 
       it('specifies a real drupal/core version', function() {
         var json = JSON.parse(fs.readFileSync('composer.json', 'utf8'));
-        assert.ok(json.require['drupal/core'] && _.isString(json.require['drupal/core']));
+        assert.ok(json.require['drupal/core']);
       });
     });
 

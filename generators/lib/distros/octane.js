@@ -46,7 +46,7 @@ function init() {
     return composer;
   }
 
-  module.modifyComposer = function(yo, options, localComposer, isNewProject, done, cb) {
+  module.modifyComposer = function(options, localComposer, isNewProject, done, cb) {
     // We fetch the current composer.json from Drupal.org for the distro.
     // Then we merge the "require", "require-dev", patches" sections with either
     // the existing project composer.json, or the Drupal base template.
@@ -82,10 +82,11 @@ function init() {
             cb(null, localComposer, done);
           }
           else if (error) {
-            yo.log.error("Could not retrieve Octane's composer.json.");
             cb(error, null, done);
           }
-          done();
+          else {
+            done();
+          }
         }
       );
     }

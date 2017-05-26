@@ -162,39 +162,29 @@ module.exports = Generator.extend({
 
     // While there are write operations in this, other write operations may need
     // to examine the composer.json to determine their own configuration.
-    composerJson: function () {
+    prepareComposerJson: function () {
       var isNewProject = (this.composerOrig == undefined);
       if (!isNewProject) {
         // Use original composer file if project already generated.
         this.composer = this.composerOrig;
       }
 
-      this.composer.name = options.projectName;
+      this.composer.name = 'organization/' + options.projectName;
       this.composer.description = options.projectDescription;
       // Allow distros to modify the composer.json.
       if (typeof options.drupalDistro.modifyComposer == 'function') {
         var done = this.async();
-        var self = this;
-        options.drupalDistro.modifyComposer(self, options, this.composer, isNewProject, done, function(err, result, done) {
+        options.drupalDistro.modifyComposer(options, this.composer, isNewProject, done, function(err, result, done) {
           if (!err && result) {
             this.composer = result;
           }
+          else {
+            this.log.warning("Could not retrieve Octane's composer.json: "  + err);
+            return done(err);
+          }
           done();
-        }.bind(self));
+        }.bind(this));
       }
-
-      // Overwrite new project composer.json with a new core version.
-      // This needs to go down here to give distros a chance to preemptively
-      // modify the version of drupal/core.
-      if (isNewProject) {
-        // drupal/core is set, it is a real version or range and we have a
-        // release version to derive something better.
-        if (this.composer.require['drupal/core'] && !_.isString(this.composer.require['drupal/core']) && options.drupalDistroRelease) {
-          this.composer.require['drupal/core'] = drupalOrgApi.toMinorRange(options.drupalDistroRelease);
-        }
-      }
-
-      this.fs.writeJSON('composer.json', this.composer);
     }
   },
 
@@ -279,6 +269,10 @@ module.exports = Generator.extend({
           gadget.tokens(options)
         );
       }
+    },
+
+    composerJson: function() {
+      this.fs.writeJSON('composer.json', this.composer);
     },
 
     drushMakefile: function () {

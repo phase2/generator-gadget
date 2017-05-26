@@ -39,13 +39,19 @@ describe('gadget:app for Octane', function() {
   describe('composer.json', function() {
     it('has a valid composer.json', function() {
       assert.jsonFileContent('composer.json', {
-        'name': 'octane',
+        'name': 'organization/octane',
       });
     });
 
     it('does not specify a core version', function() {
       var json = JSON.parse(fs.readFileSync('composer.json', 'utf8'));
       assert.ok(!json.require['drupal/core']);
+    });
+
+    it('does include merged dependencies from the Octane composer.json', function() {
+      var json = JSON.parse(fs.readFileSync('composer.json', 'utf8'));
+      assert.ok(json.require['acquia/lightning']);
+      assert.ok(json['require-dev']['se/selenium-server-standalone']);
     });
   });
 
