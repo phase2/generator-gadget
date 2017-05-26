@@ -8,10 +8,10 @@
         }
     ],
     "require": {
-        "composer/installers": "^1.0.20",
-        "drupal-composer/drupal-scaffold": "^2.0.1",
-        "cweagans/composer-patches": "~1.0",
-        "drupal/core": true,
+        "composer/installers": "^1.2",
+        "drupal-composer/drupal-scaffold": "^2.2",
+        "cweagans/composer-patches": "^1.6",
+        "drupal/core": "~8.0",
         "roave/security-advisories": "dev-master"
     },
     "require-dev": {
@@ -21,8 +21,8 @@
         "drupal/drupal-extension": "~3.0",
         "jcalderonzumba/gastonjs": "~1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "~0.3.1",
-        "mikey179/vfsStream": "~1.2",
-        "phpunit/phpunit": "~4.8",
+        "mikey179/vfsstream": "~1.2",
+        "phpunit/phpunit": ">=4.8.28 <5",
         "drush/drush": "^8",
         "drupal/console": "1.0.0-rc16",
         "phpmd/phpmd": "~2.1",
@@ -33,6 +33,9 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "config": {
+      "sort-packages": true
+    },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
     },
