@@ -217,7 +217,7 @@ module.exports = Generator.extend({
         pkg.scripts = {};
       }
       if (!pkg.scripts['postinstall'] && options['themePath']) {
-        pkg.scripts['postinstall'] = 'cd ' + options.themePath + ' && npm install';
+        pkg.scripts['postinstall'] = 'cd ' + path.join(options.themePath, options.themeName) + ' && npm install';
       }
 
       this.fs.writeJSON('package.json', pkg);
@@ -233,7 +233,7 @@ module.exports = Generator.extend({
       // Process theme options and insert into Gruntconfig.json.
       if (options.themeName && options.themePath) {
         var themeOpts = {
-          path: "<%= config.srcPaths.drupal %>/themes/" + options.themeName
+          path: path.join(options.themePath, options.themeName)
         };
 
         if (options.themeType === 'compass') {
