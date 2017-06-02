@@ -54,7 +54,6 @@ yo gadget
 * `--skipWelcome`: Skip opening welcome message.
 * `--skipGoodbye`: Skip closing messages.
 
-
 ## Additional Resources
 
 * For information on using Grunt Drupal Tasks after installing with Gadget, see the [Grunt Drupal Tasks documentation](https://phase2.github.io/grunt-drupal-tasks).

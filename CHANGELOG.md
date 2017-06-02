@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## v1.1.0 [2017/06/02]
+
+* Update Drupal 8 composer.json to drupal-project versions.
+* Add a default value to the project description prompt.
+* Change the composer.json project name to include 'organization/' prefix for strict format compliance.
+
+### Technical Plumbing
+
+* Added Greenkeeper to help manage dependency updates.
+* Updated to yeoman-generator 1.x with various related refactorings.
+* Add Docker integration for development.
+* Add Longjohn as a dev dependency to fix asynchronous debugging, such as learning anything about templating errors.
+* Overhauled Drupal Update Feed integration, it is now almost a full-fledged API client.
+* Light reorganization to reduce race conditions.
+
 ## v1.0.0 [2017/02/18]
 
 * Generated composer.json updates
