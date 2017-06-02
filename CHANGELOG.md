@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v1.0.1 [2017/06/02]
+## v1.1.0 [2017/06/02]
 
 * Update Drupal 8 composer.json to drupal-project versions.
 * Add a default value to the project description prompt.
