@@ -18,6 +18,7 @@ var prompts = [
     default: _.last(process.cwd().split('/')),
     validate: function (input) {
       if (input.search(' ') !== -1) return 'No spaces allowed.';
+      if (/[A-Z]/.test(input)) return 'Lower-case characters only.';
       return true;
     }
   },
