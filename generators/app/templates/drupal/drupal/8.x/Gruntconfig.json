@@ -25,6 +25,6 @@
   },
   "eslint": true,
   "scripts": {
-    "update": "<%= config.drush.cmd %> <%= config.alias %> features-revert-all -yv"
+    "update": "<%= config.drush.cmd %> <%= config.alias %> updatedb -yv"
   }
 }
