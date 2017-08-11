@@ -65,7 +65,7 @@ module.exports = Generator.extend({
         var done = this.async();
         options.drupalDistro.releaseVersion(options.drupalDistroVersion, done, function(err, version, done) {
           if (err) {
-            this.log.error(err);
+            this.env.error('Could not retrieve distribution project info: ' + err);
             return done(err);
           }
           options.drupalDistroRelease = version;
@@ -86,7 +86,7 @@ module.exports = Generator.extend({
           drupalOrgApi.latestRelease(options.cacheInternal, options.drupalDistroVersion, done,
             function(err, version, done) {
               if (err) {
-                this.log.error(err);
+                this.env.error('Could not retrieve project info for selected cache system: ' + err);
                 return done(err);
               }
               options.cacheVersion = version.substr(4);
@@ -107,7 +107,7 @@ module.exports = Generator.extend({
           drupalOrgApi.latestRelease('smtp', options.drupalDistroVersion, done,
             function(err, version, done) {
               if (err) {
-                this.log.error(err);
+                this.env.error('Could not retrieve project info for selected mail system: ' + err);
                 return done(err);
               }
               options.smtpVersion = version.substr(4);

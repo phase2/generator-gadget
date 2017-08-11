@@ -66,7 +66,7 @@ function init() {
         return cb(null, result.releases[0].release[0].version[0], done);
       }
       else {
-        err = 'No version data found.';
+        err = 'No version data found. This may be a an error in communication with updates.drupal.org.';
       }
       if (err) {
         return cb(err, null, done);
@@ -86,7 +86,7 @@ function init() {
         return cb(null, release.version[0], done);
       }
       else {
-        err = 'No version data found.';
+        err = 'No version data found. This may be a an error in communication with updates.drupal.org.';
       }
 
       if (err) {
