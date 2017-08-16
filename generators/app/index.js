@@ -138,6 +138,7 @@ module.exports = Generator.extend({
 
     generateProfile: function() {
       if (options.projectProfile != undefined && options.projectProfile != 'none') {
+        options.parentProfile = (options.drupalDistro.id != 'drupal') ? options.drupalDistro.id : '';
         this.fs.copyTpl(
           path.resolve(this.templatePath('profile'), 'profile-name.info.yml'),
           path.resolve(this.destinationRoot(), 'src', 'profiles', options.projectProfile, options.projectProfile + '.info.yml'),
