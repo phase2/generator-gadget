@@ -136,6 +136,21 @@ module.exports = Generator.extend({
       );
     },
 
+    generateProfile: function() {
+      if (options.projectProfile != undefined && options.projectProfile != 'none') {
+        this.fs.copyTpl(
+          path.resolve(this.templatePath('profile'), 'profile-name.info.yml'),
+          path.resolve(this.destinationRoot(), 'src', 'profiles', options.projectProfile, options.projectProfile + '.info.yml'),
+          options
+        );
+        this.fs.copyTpl(
+          path.resolve(this.templatePath('profile'), 'profile-name.profile'),
+          path.resolve(this.destinationRoot(), 'src', 'profiles', options.projectProfile, options.projectProfile + '.profile'),
+          options
+        );
+      }
+    },
+
     // This has been moved up from writing because the details of some of these
     // files may need to be loaded as part of configuring other write operations,
     // and the parallelization model for generator composition requires

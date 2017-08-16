@@ -66,6 +66,22 @@ var prompts = [
     choices: function(answers) {
       return answers['drupalDistro'].versions;
     }
+  },
+  {
+    type: 'input',
+    name: 'projectProfile',
+    message: 'Machine-name of your ' + chalk.red('profile') + ' ("none" for none) ?',
+    default: function(answers) {
+      return answers['projectName'];
+    },
+    when: function(answers) {
+      return answers['drupalDistroVersion'] == '8.x';
+    },
+    validate: function (input) {
+      if (input.search(' ') !== -1) return 'No spaces allowed.';
+      if (/[A-Z]/.test(input)) return 'Lower-case characters only.';
+      return true;
+    }
   }
 ];
 
