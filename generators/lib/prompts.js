@@ -17,8 +17,7 @@ var prompts = [
     // Name of the parent directory.
     default: _.last(process.cwd().split('/')),
     validate: function (input) {
-      if (input.search(' ') !== -1) return 'No spaces allowed.';
-      if (/[A-Z]/.test(input)) return 'Lower-case characters only.';
+      if (!/^[a-z]([a-z0-9])*(_[a-z0-9]+)*$/.test(input)) return 'Machine name only (lower case letters and underscores only).';
       return true;
     }
   },
@@ -84,8 +83,7 @@ var prompts = [
       return answers['doGenerateProfile'] && answers['drupalDistroVersion'] == '8.x';
     },
     validate: function (input) {
-      if (input.search(' ') !== -1) return 'No spaces allowed.';
-      if (/[A-Z]/.test(input)) return 'Lower-case characters only.';
+      if (!/^[a-z]([a-z0-9])*(_[a-z0-9]+)*$/.test(input)) return 'Machine name only (lower case letters and underscores only).';
       return true;
     }
   }
