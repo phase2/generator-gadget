@@ -68,14 +68,20 @@ var prompts = [
     }
   },
   {
+    type: 'confirm',
+    name: 'doGenerateProfile',
+    message: 'Do you want to generate a custom Drupal profile?',
+    default: false
+  },
+  {
     type: 'input',
     name: 'projectProfile',
-    message: 'Machine-name of your ' + chalk.red('profile') + ' ("none" for none) ?',
+    message: 'Machine-name of your Drupal ' + chalk.red('Installation Profile') + ':',
     default: function(answers) {
       return answers['projectName'];
     },
     when: function(answers) {
-      return answers['drupalDistroVersion'] == '8.x';
+      return answers['doGenerateProfile'] && answers['drupalDistroVersion'] == '8.x';
     },
     validate: function (input) {
       if (input.search(' ') !== -1) return 'No spaces allowed.';

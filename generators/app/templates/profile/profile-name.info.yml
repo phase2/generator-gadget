@@ -1,4 +1,4 @@
-name: <%= projectName %>
+name: <%= projectProfileLabel %>
 core: 8.x
 type: profile
 description: '<%= projectDescription %>'
@@ -6,8 +6,9 @@ config_install: true
 <% if (parentProfile) { %>
 base profile:
   name: lightning
-  excluded_dependencies:
-    # sequential list of modules from Lightning you don't want enabled
+  # sequential list of modules from Lightning you don't want enabled
+  # excluded_dependencies:
+  #   - lightning_roles
 <% } %>
 dependencies:
   # sequential list of additional modules to enable

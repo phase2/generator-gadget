@@ -137,7 +137,8 @@ module.exports = Generator.extend({
     },
 
     generateProfile: function() {
-      if (options.projectProfile != undefined && options.projectProfile != 'none') {
+      if (options.doGenerateProfile) {
+        options.projectProfileLabel = gadget.labelMaker(options.projectProfile);
         options.parentProfile = (options.drupalDistro.id != 'drupal') ? options.drupalDistro.id : '';
         this.fs.copyTpl(
           path.resolve(this.templatePath('profile'), 'profile-name.info.yml'),

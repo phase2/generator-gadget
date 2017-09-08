@@ -2,5 +2,5 @@
 
 /**
  * @file
- * The <%= projectName %> profile.
+ * The <%= projectProfileLabel %> profile.
  */
