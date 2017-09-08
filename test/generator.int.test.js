@@ -51,6 +51,32 @@ describe('gadget:app for Drupal 8', function () {
     });
   });
 
+  describe('online w/ profile', function () {
+    before(function (done) {
+      var testDir = path.join(os.tmpdir(), './temp-test-standard');
+      console.log(testDir);
+      test.run(path.join(__dirname, '../generators/app'))
+        .inDir(testDir)
+        .withOptions({
+          'skip-install': true,
+          projectName: 'drupal8',
+          projectDescription: 'test drupal8 project',
+          drupalDistro: 'drupal',
+          drupalDistroVersion: '8.x',
+          doGenerateProfile: true,
+          projectProfile: 'genr8'
+        })
+        .on('end', done);
+    });
+
+    it('creates files', function() {
+      assert.file([
+        'src/profiles/genr8/genr8.info.yml',
+        'src/profiles/genr8/genr8.profile'
+      ]);
+    });
+  });
+
   describe('offline', function () {
     before(function (done) {
       var testDir = path.join(os.tmpdir(), './temp-test-standard');
