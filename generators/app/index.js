@@ -138,6 +138,10 @@ module.exports = Generator.extend({
 
     generateProfile: function() {
       if (options.doGenerateProfile) {
+        // When executed via test, defaulting to use a profile will work but
+        // producing a default profile name does not because of the conditional
+        // prompt logic. This reintroduces the same default value.
+        options.projectProfile = options.projectProfile || options.projectName;
         options.projectProfileLabel = gadget.labelMaker(options.projectProfile);
         options.parentProfile = (options.drupalDistro.id != 'drupal') ? options.drupalDistro.id : '';
         this.fs.copyTpl(

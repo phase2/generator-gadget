@@ -70,7 +70,7 @@ var prompts = [
     type: 'confirm',
     name: 'doGenerateProfile',
     message: 'Do you want to generate a custom Drupal profile?',
-    default: false
+    default: true
   },
   {
     type: 'input',
