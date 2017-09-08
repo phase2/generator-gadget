@@ -275,7 +275,7 @@ module.exports = Generator.extend({
         gcfg.themes[options.themeName] = themeOpts;
       }
 
-      gcfg.project = { 'profile': options.drupalDistro.profile };
+      gcfg.project = { 'profile': options.projectProfile || options.drupalDistro.profile };
       gcfg.generated = { name: this.pkg.name, version: this.pkg.version };
 
       this.fs.writeJSON('Gruntconfig.json', gcfg);

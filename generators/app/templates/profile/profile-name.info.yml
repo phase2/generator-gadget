@@ -6,10 +6,10 @@ config_install: true
 <% if (parentProfile) { %>
 base profile:
   name: lightning
-  # sequential list of modules from Lightning you don't want enabled
+  # Sequential list of modules from Lightning to skip installing.
   # excluded_dependencies:
   #   - lightning_roles
 <% } %>
 dependencies:
-  # sequential list of additional modules to enable
+  # Sequential list of modules to install in addition to those from Lightning.
   - drupal:paragraphs
