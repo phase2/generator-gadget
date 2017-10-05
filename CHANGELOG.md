@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## v1.2.0 [2017/10/05]
+
+* Improved context for HTTP errors when requesting remote project metadata.
+* Default configuration of grunt update now swiched from drush features-revert-all to drush updatedb.
+* Project/Machine Name now required to be entered as lower-case.
+* Drupal 8 composer install defaults `preferred-install: 'dist'`
+* Drupal 7 composer install defaults `preferred-install: 'dist'` and `sorted-packages: true`
+
+### Technical Plumbing
+
+* Upgrade mocha to v4
+* Upgrade chalk to v2
+
 ## v1.1.0 [2017/06/02]
 
 * Update Drupal 8 composer.json to drupal-project versions.
