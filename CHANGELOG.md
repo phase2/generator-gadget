@@ -11,7 +11,6 @@
 ### Technical Plumbing
 
 * Upgrade mocha to v4
-* Upgrade chalk to v2
 
 ## v1.1.0 [2017/06/02]
 
