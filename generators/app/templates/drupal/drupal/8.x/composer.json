@@ -26,7 +26,7 @@
         "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
         "mikey179/vfsstream": "^1.2",
         "phpmd/phpmd": "^2.6",
-	"phpunit/phpunit": "^4.8.35 || ^6.1",
+        "phpunit/phpunit": "^4.8.35 || ^6.1",
         "phpspec/prophecy": "^1.4",
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
