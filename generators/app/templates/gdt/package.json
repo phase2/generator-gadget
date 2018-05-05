@@ -15,6 +15,6 @@
   "dependencies": {
     "grunt": "^1.0.0",
     "grunt-drupal-tasks": "^1.0",
-    "zombie": "^2.5.1"
+    "zombie": "^5.0.7"
   }
 }
