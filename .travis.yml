@@ -5,6 +5,7 @@ node_js:
   - '6'
   - '5'
   - '4'
+  - '10'
 install:
   - npm install -g grunt-cli mocha
   - ls -lRa
