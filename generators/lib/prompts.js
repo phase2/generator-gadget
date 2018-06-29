@@ -17,8 +17,7 @@ var prompts = [
     // Name of the parent directory.
     default: _.last(process.cwd().split('/')),
     validate: function (input) {
-      if (input.search(' ') !== -1) return 'No spaces allowed.';
-      if (/[A-Z]/.test(input)) return 'Lower-case characters only.';
+      if (!/^[a-z]([a-z0-9])*(_[a-z0-9]+)*$/.test(input)) return 'Machine name only (lower case letters and underscores only).';
       return true;
     }
   },
@@ -65,6 +64,27 @@ var prompts = [
     },
     choices: function(answers) {
       return answers['drupalDistro'].versions;
+    }
+  },
+  {
+    type: 'confirm',
+    name: 'doGenerateProfile',
+    message: 'Do you want to generate a custom Drupal profile?',
+    default: true
+  },
+  {
+    type: 'input',
+    name: 'projectProfile',
+    message: 'Machine-name of your Drupal ' + chalk.red('Installation Profile') + ':',
+    default: function(answers) {
+      return answers['projectName'];
+    },
+    when: function(answers) {
+      return answers['doGenerateProfile'] && answers['drupalDistroVersion'] == '8.x';
+    },
+    validate: function (input) {
+      if (!/^[a-z]([a-z0-9])*(_[a-z0-9]+)*$/.test(input)) return 'Machine name only (lower case letters and underscores only).';
+      return true;
     }
   }
 ];

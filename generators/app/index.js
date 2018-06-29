@@ -136,6 +136,27 @@ module.exports = Generator.extend({
       );
     },
 
+    generateProfile: function() {
+      if (options.doGenerateProfile) {
+        // When executed via test, defaulting to use a profile will work but
+        // producing a default profile name does not because of the conditional
+        // prompt logic. This reintroduces the same default value.
+        options.projectProfile = options.projectProfile || options.projectName;
+        options.projectProfileLabel = gadget.labelMaker(options.projectProfile);
+        options.parentProfile = (options.drupalDistro.id != 'drupal') ? options.drupalDistro.id : '';
+        this.fs.copyTpl(
+          path.resolve(this.templatePath('profile'), 'profile-name.info.yml'),
+          path.resolve(this.destinationRoot(), 'src', 'profiles', options.projectProfile, options.projectProfile + '.info.yml'),
+          options
+        );
+        this.fs.copyTpl(
+          path.resolve(this.templatePath('profile'), 'profile-name.profile'),
+          path.resolve(this.destinationRoot(), 'src', 'profiles', options.projectProfile, options.projectProfile + '.profile'),
+          options
+        );
+      }
+    },
+
     // This has been moved up from writing because the details of some of these
     // files may need to be loaded as part of configuring other write operations,
     // and the parallelization model for generator composition requires
@@ -254,7 +275,7 @@ module.exports = Generator.extend({
         gcfg.themes[options.themeName] = themeOpts;
       }
 
-      gcfg.project = { 'profile': options.drupalDistro.profile };
+      gcfg.project = { 'profile': options.projectProfile || options.drupalDistro.profile };
       gcfg.generated = { name: this.pkg.name, version: this.pkg.version };
 
       this.fs.writeJSON('Gruntconfig.json', gcfg);

@@ -1,0 +1,15 @@
+name: <%= projectProfileLabel %>
+core: 8.x
+type: profile
+description: '<%= projectDescription %>'
+config_install: true
+<% if (parentProfile) { %>
+base profile:
+  name: lightning
+  # Sequential list of modules from Lightning to skip installing.
+  # excluded_dependencies:
+  #   - lightning_roles
+<% } %>
+dependencies:
+  # Sequential list of modules to install in addition to those from Lightning.
+  - drupal:paragraphs
